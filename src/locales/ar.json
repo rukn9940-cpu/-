@@ -1,0 +1,66 @@
+{
+  "dir": "rtl",
+  "common": {
+    "skip_to_content": "تخطٍّ إلى المحتوى",
+    "search": "بحث",
+    "menu": "القائمة",
+    "close": "إغلاق",
+    "loading": "جارٍ التحميل…",
+    "view_all": "عرض الكل",
+    "currency": "ر.س",
+    "added": "تمت الإضافة",
+    "error_generic": "حدث خطأ، يرجى المحاولة مرة أخرى."
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "categories": "الأقسام",
+    "brands": "العلامات التجارية",
+    "offers": "العروض",
+    "business": "حلول الأعمال",
+    "installation": "خدمات التركيب",
+    "support": "الدعم",
+    "blog": "المدونة",
+    "contact": "اتصل بنا"
+  },
+  "account": {
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "my_account": "حسابي",
+    "orders": "طلباتي",
+    "wishlist": "المفضلة",
+    "logout": "تسجيل الخروج"
+  },
+  "cart": {
+    "title": "سلة المشتريات",
+    "add_to_cart": "أضف إلى السلة",
+    "empty": "سلة المشتريات فارغة",
+    "subtotal": "المجموع الفرعي",
+    "checkout": "إتمام الطلب",
+    "remove": "إزالة"
+  },
+  "product": {
+    "add_to_wishlist": "أضف إلى المفضلة",
+    "compare": "قارن",
+    "in_stock": "متوفر",
+    "out_of_stock": "غير متوفر",
+    "sku": "رقم المنتج",
+    "brand": "العلامة التجارية",
+    "specifications": "المواصفات",
+    "reviews": "التقييمات",
+    "related": "منتجات ذات صلة",
+    "off": "خصم"
+  },
+  "trust": {
+    "warranty": "ضمان معتمد",
+    "authentic": "منتج أصلي",
+    "secure_checkout": "دفع آمن",
+    "installation_available": "خدمة تركيب احترافية",
+    "support_hours": "دعم فني"
+  },
+  "footer": {
+    "newsletter_title": "اشترك في النشرة البريدية",
+    "newsletter_placeholder": "بريدك الإلكتروني",
+    "subscribe": "اشترك",
+    "rights": "جميع الحقوق محفوظة"
+  }
+}

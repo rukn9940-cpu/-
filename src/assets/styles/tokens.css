@@ -1,0 +1,180 @@
+/**
+ * RKN Premium Theme — Design Tokens
+ * ---------------------------------------------------------------------------
+ * Single source of truth for all design decisions. Components NEVER hard-code
+ * values; they consume these tokens (directly or via Tailwind utilities).
+ *
+ * Color values are raw RGB triplets ("0 87 255") so Tailwind can apply
+ * <alpha-value> opacity and so dark mode is a variable swap, not a new palette.
+ *
+ * Brand: Primary #0057FF · Secondary #FFC107 · Background #F8FAFC
+ *        Surface #FFFFFF · Text #111827 · Accent #0F172A
+ * Identity: premium security technology, enterprise-grade, RTL/Arabic-first.
+ * ---------------------------------------------------------------------------
+ */
+
+:root {
+  /* === Brand palette: Primary (#0057FF) ================================= */
+  --rkn-primary-50: 234 241 255;
+  --rkn-primary-100: 213 227 255;
+  --rkn-primary-200: 171 198 255;
+  --rkn-primary-300: 128 170 255;
+  --rkn-primary-400: 77 130 255;
+  --rkn-primary-500: 0 87 255; /* brand */
+  --rkn-primary-600: 0 73 214;
+  --rkn-primary-700: 0 59 173;
+  --rkn-primary-800: 0 46 133;
+  --rkn-primary-900: 0 32 92;
+  --rkn-primary-950: 0 18 51;
+
+  /* === Brand palette: Secondary (#FFC107) =============================== */
+  --rkn-secondary-50: 255 249 230;
+  --rkn-secondary-100: 255 241 191;
+  --rkn-secondary-200: 255 229 133;
+  --rkn-secondary-300: 255 216 77;
+  --rkn-secondary-400: 255 204 38;
+  --rkn-secondary-500: 255 193 7; /* brand */
+  --rkn-secondary-600: 214 158 0;
+  --rkn-secondary-700: 163 120 0;
+  --rkn-secondary-800: 112 82 0;
+  --rkn-secondary-900: 77 56 0;
+  --rkn-secondary-950: 46 33 0;
+
+  /* === Neutral palette: Slate (Text #111827 · Accent #0F172A) ========== */
+  --rkn-slate-50: 248 250 252; /* background */
+  --rkn-slate-100: 241 245 249;
+  --rkn-slate-200: 226 232 240;
+  --rkn-slate-300: 203 213 225;
+  --rkn-slate-400: 148 163 184;
+  --rkn-slate-500: 100 116 139;
+  --rkn-slate-600: 71 85 105;
+  --rkn-slate-700: 51 65 85;
+  --rkn-slate-800: 30 41 59;
+  --rkn-slate-900: 15 23 42; /* accent */
+  --rkn-slate-950: 2 6 23;
+
+  /* === Semantic states ================================================== */
+  --rkn-success-50: 240 253 244;
+  --rkn-success-100: 220 252 231;
+  --rkn-success-500: 34 197 94;
+  --rkn-success-600: 22 163 74;
+  --rkn-success-700: 21 128 61;
+
+  --rkn-warning-50: 255 251 235;
+  --rkn-warning-100: 254 243 199;
+  --rkn-warning-500: 245 158 11;
+  --rkn-warning-600: 217 119 6;
+  --rkn-warning-700: 180 83 9;
+
+  --rkn-danger-50: 254 242 242;
+  --rkn-danger-100: 254 226 226;
+  --rkn-danger-500: 239 68 68;
+  --rkn-danger-600: 220 38 38;
+  --rkn-danger-700: 185 28 28;
+
+  --rkn-info-50: 234 241 255;
+  --rkn-info-100: 213 227 255;
+  --rkn-info-500: 0 87 255;
+  --rkn-info-600: 0 73 214;
+  --rkn-info-700: 0 59 173;
+
+  /* === Semantic tokens (LIGHT — default) =============================== */
+  --rkn-color-bg: 248 250 252;            /* #F8FAFC */
+  --rkn-color-surface: 255 255 255;       /* #FFFFFF */
+  --rkn-color-surface-raised: 255 255 255;
+  --rkn-color-surface-sunken: 248 250 252;
+  --rkn-color-text: 17 24 39;             /* #111827 */
+  --rkn-color-text-muted: 71 85 105;      /* slate-600 */
+  --rkn-color-text-subtle: 100 116 139;   /* slate-500 */
+  --rkn-color-text-inverse: 248 250 252;
+  --rkn-color-primary: 0 87 255;
+  --rkn-color-primary-hover: 0 73 214;
+  --rkn-color-on-primary: 255 255 255;
+  --rkn-color-secondary: 255 193 7;
+  --rkn-color-on-secondary: 17 24 39;     /* dark text on amber for AA */
+  --rkn-color-accent: 15 23 42;           /* #0F172A */
+  --rkn-color-on-accent: 248 250 252;
+  --rkn-color-border: 226 232 240;        /* slate-200 */
+  --rkn-color-border-strong: 203 213 225; /* slate-300 */
+  --rkn-color-ring: 0 87 255;             /* focus ring = primary */
+
+  /* === Typography ====================================================== */
+  --rkn-font-sans: 'Inter', 'IBM Plex Sans Arabic', system-ui, -apple-system,
+    'Segoe UI', Tahoma, Arial, sans-serif;
+  --rkn-font-heading: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --rkn-font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo,
+    monospace;
+
+  /* === Radius (premium, soft) ========================================== */
+  --rkn-radius-sm: 6px;
+  --rkn-radius-md: 12px;
+  --rkn-radius-lg: 16px;
+  --rkn-radius-xl: 20px;
+  --rkn-radius-2xl: 28px;
+  --rkn-radius-3xl: 36px;
+
+  /* === Shadows (soft, layered) ========================================= */
+  --rkn-shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --rkn-shadow-sm: 0 1px 3px 0 rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.06);
+  --rkn-shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.10), 0 2px 6px -2px rgb(15 23 42 / 0.06);
+  --rkn-shadow-lg: 0 12px 28px -6px rgb(15 23 42 / 0.14), 0 6px 12px -6px rgb(15 23 42 / 0.08);
+  --rkn-shadow-xl: 0 24px 48px -12px rgb(15 23 42 / 0.18), 0 12px 20px -10px rgb(15 23 42 / 0.10);
+  --rkn-shadow-2xl: 0 40px 80px -20px rgb(15 23 42 / 0.25);
+  --rkn-shadow-focus: 0 0 0 3px rgb(0 87 255 / 0.35);
+
+  /* === Motion ========================================================== */
+  --rkn-duration-fast: 150ms;
+  --rkn-duration-base: 200ms;
+  --rkn-duration-slow: 300ms;
+  --rkn-duration-slower: 500ms;
+  --rkn-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --rkn-ease-entrance: cubic-bezier(0, 0, 0.2, 1);
+  --rkn-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --rkn-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+  /* === Layout ========================================================== */
+  --rkn-header-height: 4.5rem;
+  --rkn-topbar-height: 2.5rem;
+  --rkn-container-max: 1320px;
+  --rkn-shimmer-end: 100%; /* flipped to -100% under RTL below */
+}
+
+/* RTL: shimmer travels the opposite direction */
+[dir='rtl'] {
+  --rkn-shimmer-end: -100%;
+}
+
+/**
+ * === DARK MODE FOUNDATION ===============================================
+ * Fully built; DISABLED by default for the first release. Activated only when
+ * <html data-theme="dark"> is present (merchant toggle: appearance.enable_dark_mode).
+ * Only semantic tokens change — the palette stays identical.
+ */
+[data-theme='dark'] {
+  --rkn-color-bg: 11 17 32;               /* deep slate */
+  --rkn-color-surface: 17 24 39;          /* #111827 */
+  --rkn-color-surface-raised: 30 41 59;   /* slate-800 */
+  --rkn-color-surface-sunken: 2 6 23;     /* slate-950 */
+  --rkn-color-text: 248 250 252;
+  --rkn-color-text-muted: 148 163 184;    /* slate-400 */
+  --rkn-color-text-subtle: 100 116 139;
+  --rkn-color-text-inverse: 17 24 39;
+  --rkn-color-primary: 77 130 255;        /* brighter for contrast on dark */
+  --rkn-color-primary-hover: 128 170 255;
+  --rkn-color-on-primary: 11 17 32;
+  --rkn-color-secondary: 255 204 38;
+  --rkn-color-on-secondary: 17 24 39;
+  --rkn-color-accent: 226 232 240;        /* accent inverts to light on dark */
+  --rkn-color-on-accent: 17 24 39;
+  --rkn-color-border: 51 65 85;           /* slate-700 */
+  --rkn-color-border-strong: 71 85 105;   /* slate-600 */
+  --rkn-color-ring: 77 130 255;
+
+  --rkn-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --rkn-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.5);
+  --rkn-shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.55);
+  --rkn-shadow-lg: 0 12px 28px -6px rgb(0 0 0 / 0.6);
+  --rkn-shadow-xl: 0 24px 48px -12px rgb(0 0 0 / 0.65);
+  --rkn-shadow-2xl: 0 40px 80px -20px rgb(0 0 0 / 0.7);
+  --rkn-shadow-focus: 0 0 0 3px rgb(77 130 255 / 0.45);
+}

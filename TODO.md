@@ -19,23 +19,25 @@ Legend: `[x]` done · `[~]` in progress · `[ ]` pending · 🔒 blocked on appr
 - [x] docs/COMPONENT_LIBRARY.md
 - [x] TODO.md
 - [x] .gitignore
-- [~] **Awaiting Phase 1 approval to proceed**
+- [x] **Phase 1 approved**
 
-## Phase 2 — Design System 🔒
+## Phase 2 — Design System *(current)*
 
-- [ ] Design tokens (color, type, spacing, radius, shadow, z, motion)
-- [ ] tokens.css + dark-mode variables
-- [ ] tailwind.config.js wired to tokens
-- [ ] Typography scale (Arabic + Latin)
-- [ ] Grid & responsive breakpoints (RTL logical)
-- [ ] Primitive specs (buttons, inputs, cards, badges, modals, alerts, forms, tables, nav)
-- [ ] Icon system + RTL mirroring rules
-- [ ] Motion/animation guidelines
-- [ ] twilight.json + settings schema
-- [ ] master.twig shell + SEO base
-- [ ] app.js / app.css + build pipeline
-- [ ] ar.json / en.json bootstrap
-- [ ] docs/DESIGN_SYSTEM.md
+- [x] Design tokens (color, type, spacing, radius, shadow, z, motion)
+- [x] tokens.css + dark-mode variables
+- [x] tailwind.config.js wired to tokens
+- [x] Typography scale (Arabic + Latin) — Inter + IBM Plex Sans Arabic
+- [x] Grid & responsive breakpoints (RTL logical)
+- [x] Primitive base styles (buttons, inputs, cards, badges, modals, alerts, forms, tables, nav, skeleton)
+- [x] Icon system + RTL mirroring rules (documented)
+- [x] Motion/animation guidelines + keyframes
+- [x] twilight.json + merchant settings schema (brand, appearance, header, reviews)
+- [x] master.twig shell + SEO base + JSON-LD
+- [x] app.js / app.css + build pipeline (package.json, postcss, tailwind)
+- [x] core JS (events, storage, formatters) + utils
+- [x] ar.json / en.json bootstrap
+- [x] docs/DESIGN_SYSTEM.md
+- [~] **Awaiting Phase 2 approval to proceed**
 
 ## Phase 3 — Core Components 🔒
 

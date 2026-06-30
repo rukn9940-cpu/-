@@ -1,0 +1,66 @@
+{
+  "dir": "ltr",
+  "common": {
+    "skip_to_content": "Skip to content",
+    "search": "Search",
+    "menu": "Menu",
+    "close": "Close",
+    "loading": "Loading…",
+    "view_all": "View all",
+    "currency": "SAR",
+    "added": "Added",
+    "error_generic": "Something went wrong, please try again."
+  },
+  "nav": {
+    "home": "Home",
+    "categories": "Categories",
+    "brands": "Brands",
+    "offers": "Offers",
+    "business": "Business Solutions",
+    "installation": "Installation Services",
+    "support": "Support",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "account": {
+    "login": "Sign in",
+    "register": "Create account",
+    "my_account": "My account",
+    "orders": "Orders",
+    "wishlist": "Wishlist",
+    "logout": "Sign out"
+  },
+  "cart": {
+    "title": "Cart",
+    "add_to_cart": "Add to cart",
+    "empty": "Your cart is empty",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "remove": "Remove"
+  },
+  "product": {
+    "add_to_wishlist": "Add to wishlist",
+    "compare": "Compare",
+    "in_stock": "In stock",
+    "out_of_stock": "Out of stock",
+    "sku": "SKU",
+    "brand": "Brand",
+    "specifications": "Specifications",
+    "reviews": "Reviews",
+    "related": "Related products",
+    "off": "OFF"
+  },
+  "trust": {
+    "warranty": "Certified warranty",
+    "authentic": "Genuine product",
+    "secure_checkout": "Secure checkout",
+    "installation_available": "Professional installation",
+    "support_hours": "Technical support"
+  },
+  "footer": {
+    "newsletter_title": "Subscribe to our newsletter",
+    "newsletter_placeholder": "Your email",
+    "subscribe": "Subscribe",
+    "rights": "All rights reserved"
+  }
+}

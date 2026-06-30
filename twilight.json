@@ -1,0 +1,123 @@
+{
+  "name": "rkn-premium",
+  "title": {
+    "ar": "ركن الاحتراف — بريميوم",
+    "en": "RKN Premium"
+  },
+  "description": {
+    "ar": "تجربة متجر فاخرة لأنظمة الأمن والمراقبة — تصميم احترافي يدعم العربية وRTL.",
+    "en": "A premium security-systems storefront experience — Arabic & RTL-first, enterprise-grade."
+  },
+  "version": "1.0.0",
+  "twilight": "^2.0.0",
+  "author": {
+    "name": "RKN — ركن الاحتراف"
+  },
+  "support_rtl": true,
+  "default_language": "ar",
+  "supported_languages": ["ar", "en"],
+  "color_scheme": "light",
+  "features": [
+    "product.options",
+    "product.gallery",
+    "wishlist",
+    "compare",
+    "cart.drawer",
+    "search.suggestions",
+    "reviews.native"
+  ],
+  "fonts": {
+    "primary": "Inter",
+    "arabic": "IBM Plex Sans Arabic"
+  },
+  "settings": [
+    {
+      "id": "brand",
+      "label": { "ar": "الهوية البصرية", "en": "Brand" },
+      "fields": [
+        {
+          "id": "color_primary",
+          "type": "color",
+          "label": { "ar": "اللون الأساسي", "en": "Primary color" },
+          "default": "#0057FF"
+        },
+        {
+          "id": "color_secondary",
+          "type": "color",
+          "label": { "ar": "اللون الثانوي", "en": "Secondary color" },
+          "default": "#FFC107"
+        },
+        {
+          "id": "color_accent",
+          "type": "color",
+          "label": { "ar": "لون التمييز", "en": "Accent color" },
+          "default": "#0F172A"
+        }
+      ]
+    },
+    {
+      "id": "appearance",
+      "label": { "ar": "المظهر", "en": "Appearance" },
+      "fields": [
+        {
+          "id": "enable_dark_mode",
+          "type": "boolean",
+          "label": { "ar": "تفعيل الوضع الليلي", "en": "Enable dark mode" },
+          "help": {
+            "ar": "البنية جاهزة بالكامل، ومعطّلة افتراضيًا في الإصدار الأول.",
+            "en": "Foundation is fully built; disabled by default for the first release."
+          },
+          "default": false
+        },
+        {
+          "id": "numerals",
+          "type": "select",
+          "label": { "ar": "نظام الأرقام", "en": "Numerals" },
+          "options": [
+            { "value": "western", "label": { "ar": "أرقام إنجليزية 0123", "en": "Western 0123" } },
+            { "value": "arabic", "label": { "ar": "أرقام عربية ٠١٢٣", "en": "Arabic-Indic ٠١٢٣" } }
+          ],
+          "default": "western"
+        }
+      ]
+    },
+    {
+      "id": "header",
+      "label": { "ar": "الترويسة", "en": "Header" },
+      "fields": [
+        {
+          "id": "topbar_text",
+          "type": "string",
+          "label": { "ar": "نص الشريط العلوي", "en": "Top bar text" },
+          "default": ""
+        },
+        {
+          "id": "show_compare",
+          "type": "boolean",
+          "label": { "ar": "إظهار المقارنة", "en": "Show compare" },
+          "default": true
+        }
+      ]
+    },
+    {
+      "id": "reviews",
+      "label": { "ar": "التقييمات", "en": "Reviews" },
+      "fields": [
+        {
+          "id": "reviews_provider",
+          "type": "select",
+          "label": { "ar": "مصدر التقييمات", "en": "Reviews provider" },
+          "options": [
+            { "value": "salla", "label": { "ar": "تقييمات سلة", "en": "Salla native" } },
+            { "value": "google", "label": { "ar": "تقييمات جوجل", "en": "Google reviews" } }
+          ],
+          "default": "salla",
+          "help": {
+            "ar": "واجهة التقييمات موحّدة؛ يمكن تبديل المصدر لاحقًا دون تغيير المكوّنات.",
+            "en": "The reviews UI is provider-agnostic; the source can be switched later without changing components."
+          }
+        }
+      ]
+    }
+  ]
+}
