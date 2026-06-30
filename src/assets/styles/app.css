@@ -14,6 +14,9 @@
    BASE
    ====================================================================== */
 @layer base {
+  /* Alpine: hide elements until initialized to prevent flash. */
+  [x-cloak] { display: none !important; }
+
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -206,6 +209,13 @@
   .rkn-dialog {
     @apply fixed z-modal rounded-2xl border border-border bg-surface shadow-2xl;
   }
+
+  /* --- Carousel (scroll-snap, RTL-aware) ------------------------------ */
+  .rkn-carousel__track {
+    @apply flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar;
+    scroll-padding-inline-start: 0;
+  }
+  .rkn-carousel__track > * { @apply snap-start; }
 
   /* --- Loading skeleton ----------------------------------------------- */
   .rkn-skeleton {

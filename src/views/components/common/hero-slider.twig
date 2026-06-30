@@ -1,0 +1,36 @@
+{#
+  common/hero-slider.twig — auto-playing hero carousel
+  @param slides  array  [{ title, subtitle, image, ctaLabel, ctaHref, align }]
+  @param autoplay number  ms (default 6000)
+  @a11y  region label, prev/next + dot controls, pauses on hover/focus,
+         respects reduced-motion; first slide image eager for LCP
+#}
+{% set slides = slides|default([]) %}
+{% if slides is not empty %}
+<section class="rkn-container py-4" aria-roledescription="carousel" aria-label="{{ trans('home.hero')|default('العروض الرئيسية') }}"
+         x-data="rknCarousel({ autoplay: {{ autoplay|default(6000) }}, loop: true })"
+         @mouseenter="pause()" @mouseleave="play()" @focusin="pause()" @focusout="play()">
+  <div class="relative overflow-hidden rounded-2xl">
+    <div x-ref="track" class="rkn-carousel__track snap-x snap-mandatory">
+      {% for slide in slides %}
+        <div class="w-full shrink-0 snap-center" role="group" aria-roledescription="slide" aria-label="{{ loop.index }} / {{ slides|length }}">
+          {% include 'components/common/hero-banner.twig' with {
+            title: slide.title, subtitle: slide.subtitle, image: slide.image,
+            ctaLabel: slide.ctaLabel, ctaHref: slide.ctaHref, align: slide.align|default('start')
+          } only %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {# Controls #}
+    <button class="absolute inset-block-1/2 inset-inline-start-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-surface/80 text-content shadow-md backdrop-blur transition hover:bg-surface"
+            @click="prev()" aria-label="{{ trans('common.previous')|default('السابق') }}">
+      <svg class="size-5 rkn-flip-rtl" viewBox="0 0 20 20" fill="currentColor"><path d="M12.5 4l-6 6 6 6 1.4-1.4L9.3 10l4.6-4.6z"/></svg>
+    </button>
+    <button class="absolute inset-block-1/2 inset-inline-end-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-surface/80 text-content shadow-md backdrop-blur transition hover:bg-surface"
+            @click="next()" aria-label="{{ trans('common.next')|default('التالي') }}">
+      <svg class="size-5 rkn-flip-rtl" viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 4L6.1 5.4 10.7 10l-4.6 4.6L7.5 16l6-6z"/></svg>
+    </button>
+  </div>
+</section>
+{% endif %}

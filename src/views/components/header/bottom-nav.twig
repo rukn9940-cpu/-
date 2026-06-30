@@ -1,0 +1,43 @@
+{#
+  header/bottom-nav.twig — mobile bottom tab bar (app-like)
+  @summary  Sticky bottom navigation for phones: home, categories, search, cart, account.
+  @a11y  nav landmark; current tab marked aria-current; cart badge live count
+#}
+<nav class="fixed inset-block-end-0 inset-inline-0 z-sticky border-t border-border bg-surface/95 backdrop-blur-md lg:hidden"
+     style="padding-block-end: env(safe-area-inset-bottom)" aria-label="{{ trans('nav.bottom')|default('تنقل سفلي') }}">
+  <ul class="grid grid-cols-5">
+    <li>
+      <a href="{{ url.home|default('/') }}" class="flex flex-col items-center gap-1 py-2.5 text-[11px] text-content-muted">
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg>
+        {{ trans('nav.home') }}
+      </a>
+    </li>
+    <li>
+      <button @click="$store.ui.toggle('mobileNav')" class="flex w-full flex-col items-center gap-1 py-2.5 text-[11px] text-content-muted">
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        {{ trans('nav.categories') }}
+      </button>
+    </li>
+    <li>
+      <button @click="$store.ui.toggle('search')" class="flex w-full flex-col items-center gap-1 py-2.5 text-[11px] text-content-muted">
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg>
+        {{ trans('common.search') }}
+      </button>
+    </li>
+    <li>
+      <button @click="$dispatch('rkn:open-cart')" class="relative flex w-full flex-col items-center gap-1 py-2.5 text-[11px] text-content-muted">
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+        <span x-show="$store.badges.cart > 0" x-cloak
+              class="absolute inset-block-start-1 inset-inline-end-6 grid min-w-5 place-items-center rounded-full bg-primary-600 px-1 text-[10px] font-bold text-white"
+              x-text="$store.badges.cart"></span>
+        {{ trans('cart.title') }}
+      </button>
+    </li>
+    <li>
+      <a href="{{ url.account|default('/profile') }}" class="flex flex-col items-center gap-1 py-2.5 text-[11px] text-content-muted">
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        {{ trans('account.my_account') }}
+      </a>
+    </li>
+  </ul>
+</nav>

@@ -1,0 +1,70 @@
+{#
+  footer/footer.twig — site footer
+  @summary  Newsletter, link columns, contact, social, payment/shipping marks,
+            and copyright. Mobile-first stacked → multi-column on desktop.
+  @param columns  array  [{ title, links:[{name,url}] }]
+  @param social   array  [{ icon, url, name }]
+  @a11y  contentinfo landmark, labelled social links, lists
+#}
+<div class="mt-16 border-t border-border bg-surface">
+  <div class="rkn-container py-12">
+    {# Newsletter #}
+    <div class="mb-12">{% include 'components/footer/newsletter.twig' %}</div>
+
+    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
+      {# Brand + contact #}
+      <div class="lg:col-span-2">
+        <a href="{{ url.home|default('/') }}" class="inline-flex items-center gap-2">
+          {% if store.logo %}<img src="{{ store.logo }}" alt="{{ store.name }}" class="h-9 w-auto">
+          {% else %}<span class="text-xl font-extrabold text-content">{{ store.name|default('RKN') }}</span>{% endif %}
+        </a>
+        <p class="mt-4 max-w-sm text-sm text-content-muted">{{ store.description|default(trans('footer.about')|default('متجرك المتخصص في أنظمة الأمن والمراقبة في المملكة العربية السعودية.')) }}</p>
+        <ul class="mt-5 space-y-2 text-sm text-content-muted">
+          {% if store.phone %}<li class="flex items-center gap-2"><svg class="size-4 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5c0 9 6 15 15 15l2-3-4-2-2 2c-3-1.5-5.5-4-7-7l2-2-2-4z"/></svg>{{ store.phone }}</li>{% endif %}
+          {% if store.email %}<li class="flex items-center gap-2"><svg class="size-4 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>{{ store.email }}</li>{% endif %}
+        </ul>
+      </div>
+
+      {# Link columns #}
+      {% for col in columns|default([]) %}
+        <nav aria-label="{{ col.title }}">
+          <h3 class="mb-4 text-sm font-bold text-content">{{ col.title }}</h3>
+          <ul class="space-y-2.5">
+            {% for link in col.links %}
+              <li><a href="{{ link.url }}" class="text-sm text-content-muted transition hover:text-primary-700">{{ link.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endfor %}
+    </div>
+
+    {# Social + payments #}
+    <div class="mt-10 flex flex-col items-center justify-between gap-6 border-t border-border pt-8 md:flex-row">
+      <ul class="flex items-center gap-2">
+        {% for s in social|default([]) %}
+          <li>
+            <a href="{{ s.url }}" class="grid size-10 place-items-center rounded-full border border-border text-content-muted transition hover:border-primary-300 hover:text-primary-600"
+               aria-label="{{ s.name }}" rel="noopener" target="_blank">
+              <svg class="size-5" aria-hidden="true"><use href="#icon-{{ s.icon }}"></use></svg>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="flex items-center gap-2 opacity-80">
+        {# Payment marks — Salla injects merchant-enabled methods; placeholder icons here #}
+        {% for pm in ['mada','visa','mastercard','applepay','tabby'] %}
+          <span class="grid h-7 w-11 place-items-center rounded border border-border bg-surface text-[10px] font-bold text-content-subtle">{{ pm|upper }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# Copyright #}
+  <div class="border-t border-border py-5 text-center text-xs text-content-subtle">
+    © {{ "now"|date('Y') }} {{ store.name }} — {{ trans('footer.rights') }}
+  </div>
+</div>
+
+{# Bottom navigation + cart drawer mount (global) #}
+{% include 'components/header/bottom-nav.twig' %}
+{% include 'components/commerce/cart-drawer.twig' %}

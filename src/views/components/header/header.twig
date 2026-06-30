@@ -1,0 +1,95 @@
+{#
+  header/header.twig — Sticky site header (composes the header family)
+  @summary  Announcement bar + sticky condensing header with logo, mega menu,
+            smart search, and action icons (wishlist, compare, account, cart).
+            Hides on scroll-down, reveals on scroll-up.
+  @param menu  array  navigation tree (passed to mega-menu & mobile-nav)
+  @a11y  banner landmark, labelled icon buttons, live cart/wishlist counts
+#}
+{% include 'components/header/announcement-bar.twig' %}
+
+<div x-data="rknStickyHeader()"
+     class="sticky inset-block-start-0 z-header transition-transform duration-300 ease-standard"
+     :class="{ 'shadow-md': scrolled, '-translate-y-full': hidden }">
+  <div class="border-b border-border bg-surface/95 backdrop-blur-md">
+    <div class="rkn-container flex items-center gap-4 transition-all duration-300"
+         :class="scrolled ? 'h-16' : 'h-[var(--rkn-header-height)]'">
+
+      {# Mobile menu toggle #}
+      <button class="rkn-btn rkn-btn--ghost rkn-btn--icon lg:hidden" @click="$store.ui.toggle('mobileNav')"
+              aria-label="{{ trans('common.menu') }}">
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+
+      {# Logo #}
+      <a href="{{ url.home|default('/') }}" class="flex shrink-0 items-center gap-2" aria-label="{{ store.name }}">
+        {% if store.logo %}
+          <img src="{{ store.logo }}" alt="{{ store.name }}" class="h-9 w-auto" width="140" height="36">
+        {% else %}
+          <span class="text-xl font-extrabold tracking-tight text-content">{{ store.name|default('RKN') }}</span>
+        {% endif %}
+      </a>
+
+      {# Desktop search (flex-grow) #}
+      <div class="hidden flex-1 md:block">
+        {% include 'components/header/search.twig' %}
+      </div>
+
+      {# Actions #}
+      <div class="flex shrink-0 items-center gap-0.5 ms-auto md:ms-0">
+        {# Search toggle (mobile) #}
+        <button class="rkn-btn rkn-btn--ghost rkn-btn--icon md:hidden" @click="$store.ui.toggle('search')" aria-label="{{ common.search ?? trans('common.search') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg>
+        </button>
+
+        {# Compare #}
+        {% if theme.settings.show_compare|default(true) %}
+        <a href="{{ url.compare|default('/compare') }}" class="rkn-btn rkn-btn--ghost rkn-btn--icon relative hidden sm:inline-flex"
+           aria-label="{{ trans('product.compare') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3v18M17 3v18M3 8h8M13 16h8"/></svg>
+          <span x-show="$store.compare.count > 0" x-cloak x-text="$store.compare.count"
+                class="absolute -inset-block-start-0 inset-inline-end-1 grid min-w-5 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-white"></span>
+        </a>
+        {% endif %}
+
+        {# Wishlist #}
+        <a href="{{ url.wishlist|default('/wishlist') }}" class="rkn-btn rkn-btn--ghost rkn-btn--icon relative hidden sm:inline-flex"
+           aria-label="{{ trans('account.wishlist') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.6-9.2-8.4C1 8.4 2.7 5 6 5c2 0 3.2 1.2 4 2.3C10.8 6.2 12 5 14 5c3.3 0 5 3.4 3.2 6.6C19 15.4 12 20 12 20z"/></svg>
+          <span x-show="$store.badges.wishlist > 0" x-cloak x-text="$store.badges.wishlist"
+                class="absolute -inset-block-start-0 inset-inline-end-1 grid min-w-5 place-items-center rounded-full bg-danger-600 px-1 text-[10px] font-bold text-white"></span>
+        </a>
+
+        {# Account #}
+        <a href="{{ url.account|default('/profile') }}" class="rkn-btn rkn-btn--ghost rkn-btn--icon" aria-label="{{ trans('account.my_account') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        </a>
+
+        {# Cart #}
+        <button class="rkn-btn rkn-btn--ghost rkn-btn--icon relative" @click="$dispatch('rkn:open-cart')" aria-label="{{ trans('cart.title') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/></svg>
+          <span x-show="$store.badges.cart > 0" x-cloak x-text="$store.badges.cart"
+                class="absolute -inset-block-start-0 inset-inline-end-1 grid min-w-5 place-items-center rounded-full bg-primary-600 px-1 text-[10px] font-bold text-white"></span>
+        </button>
+      </div>
+    </div>
+
+    {# Desktop mega navigation row #}
+    <div class="border-t border-border bg-surface" :class="scrolled && 'hidden'">
+      <div class="rkn-container">
+        {% include 'components/header/mega-menu.twig' with { menu: menu } %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{# Mobile search sheet #}
+<div x-show="$store.ui.search" x-cloak class="fixed inset-block-start-0 inset-inline-0 z-modal bg-surface p-4 shadow-lg md:hidden"
+     x-transition @keydown.escape.window="$store.ui.close('search')">
+  <div class="flex items-center gap-2">
+    <div class="flex-1">{% include 'components/header/search.twig' %}</div>
+    <button class="rkn-btn rkn-btn--ghost" @click="$store.ui.close('search')">{{ trans('common.close') }}</button>
+  </div>
+</div>
+
+{% include 'components/header/mobile-nav.twig' with { menu: menu } %}

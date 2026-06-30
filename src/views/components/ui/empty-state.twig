@@ -1,0 +1,18 @@
+{#
+  ui/empty-state.twig — friendly empty placeholder
+  @param icon      string  icon name (default 'box')
+  @param title     string  required
+  @param message   string  optional supporting text
+  @param ctaLabel  string  optional action label
+  @param ctaHref   string  optional action url
+#}
+<div class="mx-auto flex max-w-md flex-col items-center px-4 py-14 text-center">
+  <div class="mb-5 flex size-20 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+    <svg class="size-9" aria-hidden="true"><use href="#icon-{{ icon|default('box') }}"></use></svg>
+  </div>
+  <h3 class="text-lg font-bold text-content">{{ title }}</h3>
+  {% if message %}<p class="mt-2 text-sm text-content-muted">{{ message }}</p>{% endif %}
+  {% if ctaLabel and ctaHref %}
+    <a href="{{ ctaHref }}" class="rkn-btn rkn-btn--primary mt-6">{{ ctaLabel }}</a>
+  {% endif %}
+</div>

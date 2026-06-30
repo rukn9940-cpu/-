@@ -1,0 +1,23 @@
+{#
+  ui/quantity-selector.twig — accessible quantity stepper
+  @param value  number  default 1
+  @param min    number  default 1
+  @param max    number  default 99
+  @param name   string  input name (default 'quantity')
+  @emits rkn:quantity { value }
+  @a11y  buttons labelled; input is a real number field
+#}
+<div class="inline-flex items-stretch overflow-hidden rounded-lg border border-border bg-surface"
+     x-data="rknQuantity({ value: {{ value|default(1) }}, min: {{ min|default(1) }}, max: {{ max|default(99) }} })">
+  <button type="button" class="px-3 text-content-muted transition hover:bg-surface-sunken hover:text-content"
+          @click="dec()" :disabled="qty <= min" aria-label="{{ trans('product.decrease')|default('إنقاص') }}">
+    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor"><path d="M4 9h12v2H4z"/></svg>
+  </button>
+  <input type="number" name="{{ name|default('quantity') }}" class="w-12 border-x border-border text-center text-sm font-semibold focus:outline-none"
+         x-model.number="qty" :min="min" :max="max" @input="onInput($event)"
+         aria-label="{{ trans('product.quantity')|default('الكمية') }}">
+  <button type="button" class="px-3 text-content-muted transition hover:bg-surface-sunken hover:text-content"
+          @click="inc()" :disabled="qty >= max" aria-label="{{ trans('product.increase')|default('زيادة') }}">
+    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9 4h2v5h5v2h-5v5H9v-5H4V9h5z"/></svg>
+  </button>
+</div>

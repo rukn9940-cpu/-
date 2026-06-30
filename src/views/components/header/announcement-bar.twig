@@ -1,0 +1,24 @@
+{#
+  header/announcement-bar.twig — dismissible promo strip above the header
+  @param text   string  message (falls back to theme setting)
+  @param href   string  optional link
+  @param id     string  dismissal key (default 'default')
+  @a11y  region label; dismiss button labelled
+#}
+{% set text = text|default(theme.settings.topbar_text)|default('') %}
+{% if text %}
+<div x-data="rknAnnouncementBar('{{ id|default('default') }}')" x-show="visible" x-cloak
+     class="bg-accent text-content-inverse" role="region"
+     aria-label="{{ trans('common.announcement')|default('إعلان') }}">
+  <div class="rkn-container flex h-[var(--rkn-topbar-height)] items-center justify-center gap-3 text-xs sm:text-sm">
+    <p class="truncate text-center">
+      {% if href %}<a href="{{ href }}" class="font-semibold text-content-inverse underline-offset-4 hover:underline">{{ text }}</a>
+      {% else %}{{ text }}{% endif %}
+    </p>
+    <button type="button" class="absolute inset-inline-end-4 text-content-inverse/70 transition hover:text-content-inverse"
+            @click="dismiss()" aria-label="{{ trans('common.close') }}">
+      <svg class="size-4" viewBox="0 0 20 20" fill="currentColor"><path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+  </div>
+</div>
+{% endif %}

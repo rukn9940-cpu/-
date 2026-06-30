@@ -86,12 +86,15 @@
 <body class="min-h-dvh bg-bg text-content font-sans antialiased">
   {% hook 'body:start' %}
 
+  {# Icon sprite (defines <use href="#icon-…"> symbols) — included once. #}
+  {% include 'components/ui/icon-sprite.twig' %}
+
   <a href="#main" class="rkn-skip-link">{{ trans('common.skip_to_content')|default('تخطٍّ إلى المحتوى') }}</a>
 
-  {# --- Header slot (Phase 3: top-bar, mega-menu, search, cart) ---------- #}
+  {# --- Header (top-bar, mega-menu, search, cart entry points) ---------- #}
   <header class="rkn-site-header" role="banner">
     {% block header %}
-      {# include 'components/header/header.twig' — added in Phase 3 #}
+      {% include 'components/header/header.twig' with { menu: menu|default([]) } %}
     {% endblock %}
   </header>
 
@@ -103,10 +106,13 @@
 
   {% block after_content %}{% endblock %}
 
-  {# --- Footer slot (Phase 3: links, newsletter, trust marks) ------------ #}
+  {# --- Footer (links, newsletter, trust marks, bottom-nav, cart drawer) - #}
   <footer class="rkn-site-footer" role="contentinfo">
     {% block footer %}
-      {# include 'components/footer/footer.twig' — added in Phase 3 #}
+      {% include 'components/footer/footer.twig' with {
+        columns: footer_columns|default([]),
+        social: social_links|default([])
+      } %}
     {% endblock %}
   </footer>
 

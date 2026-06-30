@@ -1,0 +1,28 @@
+{#
+  ui/button.twig — Button / link-button primitive
+  @param label    string  required — visible text
+  @param variant  string  primary|secondary|outline|ghost|danger (default primary)
+  @param size     string  sm|md|lg (default md)
+  @param href     string  optional — renders an <a> instead of <button>
+  @param type     string  button|submit (default button)
+  @param icon     string  optional — leading icon name (svg use)
+  @param block    bool    full width (default false)
+  @param attrs    string  optional extra attributes (e.g. x-on, aria-*)
+  @a11y  icon-only buttons must pass `label` for aria-label via attrs
+#}
+{% set variant = variant|default('primary') %}
+{% set size = size|default('md') %}
+{% set classes = 'rkn-btn rkn-btn--' ~ variant
+  ~ (size == 'sm' ? ' rkn-btn--sm' : (size == 'lg' ? ' rkn-btn--lg' : ''))
+  ~ (block|default(false) ? ' rkn-btn--block' : '') %}
+{% if href %}
+  <a href="{{ href }}" class="{{ classes }}" {{ attrs|raw }}>
+    {% if icon %}<svg class="size-5" aria-hidden="true"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+    <span>{{ label }}</span>
+  </a>
+{% else %}
+  <button type="{{ type|default('button') }}" class="{{ classes }}" {{ attrs|raw }}>
+    {% if icon %}<svg class="size-5" aria-hidden="true"><use href="#icon-{{ icon }}"></use></svg>{% endif %}
+    <span>{{ label }}</span>
+  </button>
+{% endif %}

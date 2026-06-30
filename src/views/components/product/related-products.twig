@@ -1,0 +1,33 @@
+{#
+  product/related-products.twig — horizontal carousel of related items
+  @param title     string  section heading (default 'منتجات ذات صلة')
+  @param products  array    list of Salla products
+  @a11y  region label, prev/next labelled, RTL-aware scroll
+#}
+{% set products = products|default([]) %}
+{% if products is not empty %}
+<section class="rkn-section" aria-label="{{ title|default(trans('product.related')) }}"
+         x-data="rknCarousel({ loop: false })">
+  <div class="rkn-container">
+    <div class="mb-6 flex items-center justify-between">
+      <h2 class="text-xl font-bold text-content md:text-2xl">{{ title|default(trans('product.related')) }}</h2>
+      <div class="hidden gap-2 md:flex">
+        <button class="rkn-btn rkn-btn--outline rkn-btn--icon" @click="prev()" :disabled="atStart" aria-label="{{ trans('common.previous')|default('السابق') }}">
+          <svg class="size-5 rkn-flip-rtl" viewBox="0 0 20 20" fill="currentColor"><path d="M12.5 4l-6 6 6 6 1.4-1.4L9.3 10l4.6-4.6z"/></svg>
+        </button>
+        <button class="rkn-btn rkn-btn--outline rkn-btn--icon" @click="next()" :disabled="atEnd" aria-label="{{ trans('common.next')|default('التالي') }}">
+          <svg class="size-5 rkn-flip-rtl" viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 4L6.1 5.4 10.7 10l-4.6 4.6L7.5 16l6-6z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div x-ref="track" class="rkn-carousel__track">
+      {% for product in products %}
+        <div class="w-[68%] shrink-0 snap-start sm:w-[44%] md:w-[31%] lg:w-[23%]">
+          {% include 'components/product/product-card.twig' with { product: product } only %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}

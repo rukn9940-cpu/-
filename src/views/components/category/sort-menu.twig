@@ -1,0 +1,24 @@
+{#
+  category/sort-menu.twig — sort dropdown
+  @param options  array   [{ value, label }]
+  @param current  string  current label
+  @emits rkn:sort { value }
+  @a11y  button + menu pattern; Esc closes
+#}
+<div class="relative" x-data="rknSortMenu('{{ current|default('') }}')" @click.outside="open = false" @keydown.escape="open = false">
+  <button type="button" class="rkn-btn rkn-btn--outline rkn-btn--sm" @click="open = !open" :aria-expanded="open" aria-haspopup="true">
+    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+    <span x-text="current || '{{ trans('category.sort')|default('ترتيب حسب') }}'"></span>
+    <svg class="size-4 text-content-subtle" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 5 5-5z"/></svg>
+  </button>
+  <ul x-show="open" x-cloak x-transition
+      class="absolute inset-block-start-full inset-inline-end-0 z-dropdown mt-1 min-w-48 overflow-hidden rounded-lg border border-border bg-surface py-1 shadow-lg"
+      role="menu">
+    {% for opt in options|default([]) %}
+      <li role="none">
+        <button role="menuitem" class="block w-full px-4 py-2 text-start text-sm text-content transition hover:bg-surface-sunken hover:text-primary-700"
+                @click="select('{{ opt.value }}', '{{ opt.label }}')">{{ opt.label }}</button>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

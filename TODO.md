@@ -37,18 +37,28 @@ Legend: `[x]` done · `[~]` in progress · `[ ]` pending · 🔒 blocked on appr
 - [x] core JS (events, storage, formatters) + utils
 - [x] ar.json / en.json bootstrap
 - [x] docs/DESIGN_SYSTEM.md
-- [~] **Awaiting Phase 2 approval to proceed**
+- [x] **Phase 2 approved**
 
-## Phase 3 — Core Components 🔒
+## Phase 3 — Core Components *(current)*
 
-- [ ] Header: top-bar, header, mega-menu, search
-- [ ] Cart (button + drawer), wishlist, compare — SDK wired
-- [ ] Footer + newsletter (+ popup)
-- [ ] Breadcrumb, pagination, skeletons
-- [ ] Product card, category card
-- [ ] UI primitives build-out
-- [ ] Sidebar/filters shell
-- [ ] Trust components
+- [x] Announcement bar, sticky header, mega navigation/menu
+- [x] Smart search + suggestions + recent searches
+- [x] Hero banner, hero slider
+- [x] Category cards, product cards, product labels, product badges
+- [x] Flash sale cards (countdown + stock bar)
+- [x] Trust badges, brand slider, testimonial cards, CTA sections
+- [x] Newsletter, footer
+- [x] Mobile navigation (off-canvas), bottom navigation
+- [x] Breadcrumb, pagination, filters, sort menu
+- [x] Product gallery, product information, product tabs
+- [x] Review components (summary + list, provider-agnostic)
+- [x] Related products, recently viewed
+- [x] Wishlist, compare, cart drawer (SDK-wired)
+- [x] Quantity selector, loading skeletons, empty states, error states
+- [x] Alpine behavior layer (stores + data) wired into app.js
+- [x] Shell wiring (icon sprite + header + footer) in master.twig
+- [x] docs/COMPONENTS.md
+- [~] **Awaiting Phase 3 approval to proceed**
 
 ## Phase 4 — Pages 🔒
 

@@ -15,6 +15,7 @@ import focus from '@alpinejs/focus';
 import collapse from '@alpinejs/collapse';
 
 import { formatCurrency, formatNumber, discountPercent } from './core/formatters.js';
+import { registerComponents } from './components/index.js';
 
 /** Component islands register an init(root) here; booted on DOMContentLoaded. */
 const islands = [];
@@ -44,6 +45,9 @@ Alpine.plugin(collapse);
 // Expose theme helpers to Alpine templates (formatting is centralized).
 Alpine.magic('currency', () => (amount, currency) => formatCurrency(amount, currency));
 Alpine.magic('number', () => (value, options) => formatNumber(value, options));
+
+// Register all theme stores + components.
+registerComponents(Alpine);
 
 window.Alpine = Alpine;
 
