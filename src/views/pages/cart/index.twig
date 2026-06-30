@@ -1,0 +1,56 @@
+{#
+  pages/cart/index.twig — Shopping cart
+  @summary  Line items (Salla cart summary), order totals with coupon, secure
+            checkout CTA, trust badges, and a cross-sell strip. Empty state when
+            the cart is empty (driven by the live cart count store).
+#}
+{% extends 'layouts/master.twig' %}
+
+{% block content %}
+<div class="rkn-container py-8" x-data>
+  <h1 class="mb-6 text-2xl font-extrabold text-content md:text-3xl">{{ trans('cart.title') }}</h1>
+
+  {# Empty #}
+  <div x-show="$store.badges.cart === 0">
+    {% include 'components/ui/empty-state.twig' with {
+      icon: 'cart',
+      title: trans('cart.empty'),
+      message: trans('cart.empty_message')|default('لم تقم بإضافة أي منتجات بعد.'),
+      ctaLabel: trans('common.start_shopping')|default('ابدأ التسوق'), ctaHref: '/'
+    } only %}
+  </div>
+
+  {# Filled #}
+  <div x-show="$store.badges.cart > 0" x-cloak class="grid gap-8 lg:grid-cols-[1fr_360px]">
+    <div class="rkn-card p-4 md:p-6">
+      <salla-cart-summary></salla-cart-summary>
+    </div>
+
+    <aside class="lg:sticky lg:top-24 self-start space-y-4">
+      <div class="rkn-card p-5">
+        <h2 class="mb-4 text-lg font-bold">{{ trans('cart.order_summary')|default('ملخص الطلب') }}</h2>
+
+        {# Coupon #}
+        <form class="mb-4 flex gap-2" @submit.prevent="window.salla?.cart?.addCoupon?.($refs.coupon.value)">
+          <label for="coupon" class="sr-only">{{ trans('cart.coupon')|default('كود الخصم') }}</label>
+          <input id="coupon" x-ref="coupon" class="rkn-input" placeholder="{{ trans('cart.coupon')|default('كود الخصم') }}">
+          <button class="rkn-btn rkn-btn--outline whitespace-nowrap">{{ trans('cart.apply')|default('تطبيق') }}</button>
+        </form>
+
+        <a href="{{ url.checkout|default('/checkout') }}" class="rkn-btn rkn-btn--primary rkn-btn--block rkn-btn--lg">
+          {{ trans('cart.checkout') }}
+        </a>
+        <a href="/" class="rkn-btn rkn-btn--ghost rkn-btn--block mt-2">{{ trans('cart.continue_shopping')|default('متابعة التسوق') }}</a>
+      </div>
+
+      {% include 'components/trust/trust-badges.twig' with { layout: 'inline' } only %}
+    </aside>
+  </div>
+
+  {# Cross-sell #}
+  {% include 'components/product/products-section.twig' with {
+    title: trans('cart.you_may_like')|default('قد يعجبك أيضًا'),
+    source: 'sales', products: cross_sell|default([])
+  } only %}
+</div>
+{% endblock %}

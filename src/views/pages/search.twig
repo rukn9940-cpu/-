@@ -1,0 +1,43 @@
+{#
+  pages/search.twig — Search results
+  @summary  Reuses the listing grid + sort + pagination, headed by the query.
+  @data     keyword, products (array), pagination meta
+  @seo      noindex for empty/zero-result queries is recommended (Phase 5 SEO pass)
+#}
+{% extends 'layouts/master.twig' %}
+
+{% block content %}
+{% set products = products|default([]) %}
+<div class="rkn-container py-8">
+  <header class="mb-6">
+    <p class="text-sm text-content-muted">{{ trans('search.results_for')|default('نتائج البحث عن') }}</p>
+    <h1 class="text-2xl font-extrabold text-content md:text-3xl">"{{ keyword|default('') }}"</h1>
+    <p class="mt-1 text-sm text-content-subtle">{{ products.total|default(products|length) }} {{ trans('category.results')|default('نتيجة') }}</p>
+  </header>
+
+  {% if products is not empty %}
+    <div class="mb-5 flex justify-end">
+      {% include 'components/category/sort-menu.twig' with { options: [
+        { value: 'latest', label: trans('sort.latest')|default('الأحدث') },
+        { value: 'price-asc', label: trans('sort.price_low')|default('السعر: من الأقل') },
+        { value: 'price-desc', label: trans('sort.price_high')|default('السعر: من الأعلى') }
+      ] } only %}
+    </div>
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+      {% for product in products %}
+        {% include 'components/product/product-card.twig' with { product: product } only %}
+      {% endfor %}
+    </div>
+    <div class="mt-10">
+      {% include 'components/ui/pagination.twig' with { current: products.current_page|default(1), total: products.last_page|default(1), base: '?s=' ~ keyword ~ '&page={page}' } only %}
+    </div>
+  {% else %}
+    {% include 'components/ui/empty-state.twig' with {
+      icon: 'box',
+      title: trans('search.no_results_title')|default('لا توجد نتائج'),
+      message: trans('search.no_results_message')|default('جرّب كلمات بحث مختلفة أو تصفّح الأقسام.'),
+      ctaLabel: trans('common.view_all'), ctaHref: '/products'
+    } only %}
+  {% endif %}
+</div>
+{% endblock %}

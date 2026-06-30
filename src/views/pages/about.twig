@@ -1,0 +1,47 @@
+{#
+  pages/about.twig — About RKN
+  @summary  Brand story hero, mission, value pillars (trust badges), stats, and CTA.
+#}
+{% extends 'layouts/master.twig' %}
+
+{% block content %}
+{% include 'components/common/breadcrumb.twig' with { items: [{ name: trans('nav.about')|default('من نحن'), url: '/about' }] } only %}
+
+<div class="rkn-container py-8">
+  {% include 'components/common/hero-banner.twig' with {
+    title: trans('about.title')|default('ركن الاحتراف'),
+    subtitle: trans('about.subtitle')|default('شريكك الموثوق في حلول الأمن والمراقبة بالمملكة العربية السعودية.'),
+    align: 'center'
+  } only %}
+
+  <div class="mx-auto mt-12 max-w-3xl text-center">
+    <h2 class="text-xl font-bold text-content md:text-2xl">{{ trans('about.mission_title')|default('مهمتنا') }}</h2>
+    <p class="mt-3 leading-relaxed text-content-muted">{{ trans('about.mission')|default('نوفّر أنظمة أمنية أصلية بأعلى المعايير العالمية، مدعومة بخدمات تركيب وصيانة احترافية، لنمنح عملاءنا راحة البال وحماية حقيقية لمنشآتهم.') }}</p>
+  </div>
+</div>
+
+{# Stats #}
+<section class="rkn-section">
+  <div class="rkn-container grid grid-cols-2 gap-4 md:grid-cols-4">
+    {% for s in [{n:'+10', l:'سنوات خبرة'}, {n:'+5000', l:'عملية تركيب'}, {n:'+50', l:'علامة تجارية'}, {n:'24/7', l:'دعم فني'}] %}
+      <div class="rkn-card p-6 text-center">
+        <p class="text-2xl font-extrabold text-primary-700">{{ s.n }}</p>
+        <p class="mt-1 text-sm text-content-muted">{{ s.l }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{# Values #}
+<section class="rkn-section bg-surface-sunken">
+  <div class="rkn-container">
+    <h2 class="mb-8 text-center text-2xl font-extrabold text-content">{{ trans('about.values')|default('قيمنا') }}</h2>
+    {% include 'components/trust/trust-badges.twig' with { layout: 'grid' } only %}
+  </div>
+</section>
+
+{% include 'components/common/cta-section.twig' with {
+  title: trans('about.cta_title')|default('جاهز لتأمين منشأتك؟'),
+  ctaLabel: trans('about.cta')|default('تواصل معنا'), ctaHref: '/contact'
+} only %}
+{% endblock %}

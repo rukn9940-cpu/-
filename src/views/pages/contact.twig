@@ -1,0 +1,62 @@
+{#
+  pages/contact.twig — Contact
+  @summary  Contact form + store details (phone, email, address, hours) and a
+            map placeholder. Form submits via the Salla contact endpoint.
+  @seo      LocalBusiness JSON-LD with contact info
+#}
+{% extends 'layouts/master.twig' %}
+
+{% block content %}
+{% include 'components/common/breadcrumb.twig' with { items: [{ name: trans('nav.contact'), url: '/contact' }] } only %}
+
+<div class="rkn-container py-8">
+  <header class="mb-8 max-w-2xl">
+    <h1 class="text-2xl font-extrabold text-content md:text-3xl">{{ trans('contact.title')|default('تواصل معنا') }}</h1>
+    <p class="mt-2 text-content-muted">{{ trans('contact.subtitle')|default('فريقنا جاهز لمساعدتك في اختيار الحل الأمني المناسب.') }}</p>
+  </header>
+
+  <div class="grid gap-8 lg:grid-cols-[1fr_360px]">
+    {# Form #}
+    <form class="rkn-card space-y-4 p-6" x-data="{ state:'idle', msg:'' }"
+          @submit.prevent="state='loading'; (window.salla?.contacts?.send?.(Object.fromEntries(new FormData($el))) ?? Promise.reject())
+            .then(()=>{state='success'; msg='{{ trans('contact.sent')|default('تم إرسال رسالتك بنجاح!') }}'; $el.reset();})
+            .catch(()=>{state='error'; msg='{{ trans('common.error_generic') }}';})">
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="rkn-field">
+          <label class="rkn-label rkn-label--required" for="c-name">{{ trans('contact.name')|default('الاسم') }}</label>
+          <input id="c-name" name="name" class="rkn-input" required>
+        </div>
+        <div class="rkn-field">
+          <label class="rkn-label rkn-label--required" for="c-phone">{{ trans('contact.phone')|default('رقم الجوال') }}</label>
+          <input id="c-phone" name="phone" type="tel" class="rkn-input" required>
+        </div>
+      </div>
+      <div class="rkn-field">
+        <label class="rkn-label" for="c-email">{{ trans('contact.email')|default('البريد الإلكتروني') }}</label>
+        <input id="c-email" name="email" type="email" class="rkn-input">
+      </div>
+      <div class="rkn-field">
+        <label class="rkn-label rkn-label--required" for="c-msg">{{ trans('contact.message')|default('رسالتك') }}</label>
+        <textarea id="c-msg" name="message" class="rkn-textarea" required></textarea>
+      </div>
+      <button class="rkn-btn rkn-btn--primary rkn-btn--lg" :disabled="state==='loading'">
+        <span x-show="state!=='loading'">{{ trans('contact.send')|default('إرسال') }}</span>
+        <span x-show="state==='loading'" x-cloak>{{ trans('common.loading') }}</span>
+      </button>
+      <p x-show="msg" x-cloak aria-live="polite" class="text-sm" :class="state==='success' ? 'text-success-600' : 'text-danger-600'" x-text="msg"></p>
+    </form>
+
+    {# Details #}
+    <aside class="space-y-4">
+      <div class="rkn-card space-y-4 p-6">
+        {% if store.phone %}<p class="flex items-center gap-3 text-sm"><svg class="size-5 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5c0 9 6 15 15 15l2-3-4-2-2 2c-3-1.5-5.5-4-7-7l2-2-2-4z"/></svg>{{ store.phone }}</p>{% endif %}
+        {% if store.email %}<p class="flex items-center gap-3 text-sm"><svg class="size-5 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>{{ store.email }}</p>{% endif %}
+        {% if store.address %}<p class="flex items-start gap-3 text-sm"><svg class="size-5 shrink-0 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>{{ store.address }}</p>{% endif %}
+      </div>
+      <div class="aspect-video overflow-hidden rounded-xl border border-border bg-surface-sunken">
+        <div class="flex h-full items-center justify-center text-sm text-content-subtle">{{ trans('contact.map')|default('الخريطة') }}</div>
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}

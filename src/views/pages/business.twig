@@ -1,0 +1,83 @@
+{#
+  pages/business.twig — Business Solutions (B2B landing)
+  @summary  Hero, services grid, process steps, sectors served, and a quote-request
+            form. High-conversion B2B focus. (Quote Builder feature lands in Phase 5.)
+#}
+{% extends 'layouts/master.twig' %}
+
+{% block content %}
+{% include 'components/common/breadcrumb.twig' with { items: [{ name: trans('nav.business'), url: '/business' }] } only %}
+
+<div class="rkn-container py-8">
+  {% include 'components/common/hero-banner.twig' with {
+    title: trans('business.title')|default('حلول أمنية متكاملة للأعمال'),
+    subtitle: trans('business.subtitle')|default('من الاستشارة والتصميم إلى التوريد والتركيب والصيانة — شريك واحد لكل احتياجاتك الأمنية.'),
+    ctaLabel: trans('home.request_quote')|default('اطلب عرض سعر'), ctaHref: '#quote', align: 'start'
+  } only %}
+</div>
+
+{# Services #}
+<section class="rkn-section">
+  <div class="rkn-container">
+    <h2 class="mb-8 text-center text-2xl font-extrabold text-content">{{ trans('business.services')|default('خدماتنا للأعمال') }}</h2>
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {% set services = [
+        { icon: 'shield', t: 'أنظمة المراقبة', d: 'تصميم وتركيب كاميرات للمنشآت بمختلف أحجامها.' },
+        { icon: 'lock', t: 'التحكم بالدخول', d: 'بوابات وأنظمة دخول وبصمة متكاملة.' },
+        { icon: 'box', t: 'الشبكات والبنية', d: 'شبكات وتخزين واتصالات موثوقة.' },
+        { icon: 'tool', t: 'الصيانة والدعم', d: 'عقود صيانة دورية ودعم فني مستمر.' }
+      ] %}
+      {% for s in services %}
+        <div class="rkn-card p-6">
+          <span class="mb-4 inline-grid size-12 place-items-center rounded-xl bg-primary-50 text-primary-600"><svg class="size-6" aria-hidden="true"><use href="#icon-{{ s.icon }}"></use></svg></span>
+          <h3 class="text-base font-bold text-content">{{ s.t }}</h3>
+          <p class="mt-2 text-sm text-content-muted">{{ s.d }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# Process #}
+<section class="rkn-section bg-surface-sunken">
+  <div class="rkn-container">
+    <h2 class="mb-8 text-center text-2xl font-extrabold text-content">{{ trans('business.process')|default('كيف نعمل') }}</h2>
+    <ol class="grid gap-6 md:grid-cols-4">
+      {% set steps = ['استشارة ودراسة الموقع', 'تصميم الحل والعرض الفني', 'التوريد والتركيب', 'التشغيل والصيانة'] %}
+      {% for step in steps %}
+        <li class="relative rkn-card p-6">
+          <span class="mb-3 inline-grid size-9 place-items-center rounded-full bg-primary-600 text-sm font-bold text-white">{{ loop.index }}</span>
+          <p class="text-sm font-semibold text-content">{{ step }}</p>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+{# Quote form #}
+<section class="rkn-section" id="quote">
+  <div class="rkn-container max-w-2xl">
+    <div class="rkn-card p-6 md:p-8">
+      <h2 class="text-xl font-extrabold text-content">{{ trans('business.quote_title')|default('اطلب عرض سعر') }}</h2>
+      <p class="mt-1 mb-6 text-sm text-content-muted">{{ trans('business.quote_sub')|default('أخبرنا عن مشروعك وسيتواصل معك فريقنا خلال 24 ساعة.') }}</p>
+      <form class="space-y-4" x-data="{ state:'idle', msg:'' }"
+            @submit.prevent="state='loading'; (window.salla?.contacts?.send?.(Object.fromEntries(new FormData($el))) ?? Promise.reject())
+              .then(()=>{state='success'; msg='{{ trans('business.quote_sent')|default('تم استلام طلبك، سنتواصل معك قريبًا.') }}'; $el.reset();})
+              .catch(()=>{state='error'; msg='{{ trans('common.error_generic') }}';})">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rkn-field"><label class="rkn-label rkn-label--required" for="b-name">{{ trans('contact.name')|default('الاسم') }}</label><input id="b-name" name="name" class="rkn-input" required></div>
+          <div class="rkn-field"><label class="rkn-label rkn-label--required" for="b-company">{{ trans('business.company')|default('اسم المنشأة') }}</label><input id="b-company" name="company" class="rkn-input" required></div>
+          <div class="rkn-field"><label class="rkn-label rkn-label--required" for="b-phone">{{ trans('contact.phone')|default('رقم الجوال') }}</label><input id="b-phone" name="phone" type="tel" class="rkn-input" required></div>
+          <div class="rkn-field"><label class="rkn-label" for="b-city">{{ trans('business.city')|default('المدينة') }}</label><input id="b-city" name="city" class="rkn-input"></div>
+        </div>
+        <div class="rkn-field"><label class="rkn-label" for="b-details">{{ trans('business.details')|default('تفاصيل المشروع') }}</label><textarea id="b-details" name="message" class="rkn-textarea"></textarea></div>
+        <button class="rkn-btn rkn-btn--primary rkn-btn--lg rkn-btn--block" :disabled="state==='loading'">
+          <span x-show="state!=='loading'">{{ trans('home.request_quote')|default('اطلب عرض سعر') }}</span>
+          <span x-show="state==='loading'" x-cloak>{{ trans('common.loading') }}</span>
+        </button>
+        <p x-show="msg" x-cloak aria-live="polite" class="text-sm" :class="state==='success' ? 'text-success-600' : 'text-danger-600'" x-text="msg"></p>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

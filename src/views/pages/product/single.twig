@@ -1,0 +1,64 @@
+{#
+  pages/product/single.twig — Product details
+  @summary  Breadcrumb, gallery + purchase info, tabs (description/specs/reviews),
+            related products, and recently-viewed. Product + Offer + AggregateRating
+            JSON-LD for SEO.
+  @data     product (Salla product object)
+  @seo      single <h1> (in product-info); Product structured data
+#}
+{% extends 'layouts/master.twig' %}
+
+{% block title %}{{ product.name }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+{% set p = product %}
+
+{% include 'components/common/breadcrumb.twig' with { items: [
+  { name: p.category.name|default(trans('nav.categories')), url: p.category.url|default('#') },
+  { name: p.name, url: p.url }
+] } only %}
+
+<div class="rkn-container py-6">
+  <div class="grid gap-8 lg:grid-cols-2">
+    {% include 'components/product/product-gallery.twig' with { product: p } only %}
+    {% include 'components/product/product-info.twig' with { product: p } only %}
+  </div>
+
+  <div class="mt-10">
+    {% include 'components/product/product-tabs.twig' with { product: p } only %}
+  </div>
+</div>
+
+{# Related #}
+{% include 'components/product/related-products.twig' with {
+  title: trans('product.related'), products: related_products|default([])
+} only %}
+
+{# Recently viewed #}
+{% include 'components/product/recently-viewed.twig' %}
+
+{# ---- Product structured data ---------------------------------------- #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ p.name|json_encode|raw }},
+  "sku": {{ (p.sku|default(''))|json_encode|raw }},
+  {% if p.brand.name is defined %}"brand": { "@type": "Brand", "name": {{ p.brand.name|json_encode|raw }} },{% endif %}
+  {% if p.image %}"image": {{ (p.image.url|default(p.image))|json_encode|raw }},{% endif %}
+  "description": {{ (p.short_description|default(p.description|default('')))|striptags|json_encode|raw }},
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ p.sale_price|default(p.price) }}",
+    "priceCurrency": "{{ store.currency|default('SAR') }}",
+    "availability": "{{ p.is_out_of_stock|default(false) ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock' }}",
+    "url": {{ p.url|json_encode|raw }}
+  }{% if p.rating is defined and (p.rating.count|default(p.reviews_count)|default(0)) > 0 %},
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ p.rating.average|default(p.rating.stars)|default(p.rating) }}",
+    "reviewCount": "{{ p.rating.count|default(p.reviews_count)|default(0) }}"
+  }{% endif %}
+}
+</script>
+{% endblock %}

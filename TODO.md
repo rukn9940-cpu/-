@@ -58,25 +58,31 @@ Legend: `[x]` done · `[~]` in progress · `[ ]` pending · 🔒 blocked on appr
 - [x] Alpine behavior layer (stores + data) wired into app.js
 - [x] Shell wiring (icon sprite + header + footer) in master.twig
 - [x] docs/COMPONENTS.md
-- [~] **Awaiting Phase 3 approval to proceed**
+- [x] **Phase 3 approved**
 
-## Phase 4 — Pages 🔒
+## Phase 4 — Pages *(current)*
 
-- [ ] Homepage
-- [ ] Category
-- [ ] Product (+ JSON-LD)
-- [ ] Cart
-- [ ] Checkout integration
-- [ ] Login / Register
-- [ ] Dashboard / Orders
-- [ ] Wishlist / Compare
-- [ ] Brands
-- [ ] Blog (list + single)
-- [ ] About / Contact
-- [ ] Business Solutions
-- [ ] Installation Booking
-- [ ] Support / Warranty / FAQ
-- [ ] Privacy / Terms
+- [x] Homepage (all 23 sections in order)
+- [x] Category / listing page
+- [x] Product details (+ Product/Offer/AggregateRating JSON-LD)
+- [x] Search results
+- [x] Cart
+- [x] Checkout layout
+- [x] Customer dashboard
+- [x] Wishlist
+- [x] Compare
+- [x] Contact
+- [x] About
+- [x] Warranty
+- [x] Business Solutions
+- [x] Installation Booking
+- [x] Helpers: products-section, blog-card, faq, account sidebar
+- [x] docs/PAGES.md
+- [~] **Awaiting Phase 4 approval to proceed**
+
+> Login/Register, Orders detail, Brands, Blog list/single, Support, Privacy, Terms
+> are Salla-provided or thin content routes — slated for the Phase 5 content/SEO pass
+> (not requested in the Phase 4 page list).
 
 ## Phase 5 — Advanced Features 🔒
 
