@@ -1,0 +1,145 @@
+{% set menu = menu|default(store.menus.header)|default([]) %}
+
+{# Announcement bar #}
+{% if theme.settings.topbar_text %}
+<div x-data="rknAnnouncement" x-show="visible" x-cloak class="bg-accent text-content-inverse">
+  <div class="rkn-container relative flex h-10 items-center justify-center text-xs sm:text-sm">
+    <p class="truncate text-center">{{ theme.settings.topbar_text }}</p>
+    <button type="button" class="absolute inset-inline-end-4 text-content-inverse/70 transition hover:text-content-inverse" @click="dismiss()" aria-label="{{ trans('common.close')|default('إغلاق') }}">
+      <svg class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l8 8M14 6l-8 8"/></svg>
+    </button>
+  </div>
+</div>
+{% endif %}
+
+<div x-data="rknHeader" class="sticky inset-block-start-0 z-header transition-transform duration-300 ease-standard" :class="{ 'shadow-md': scrolled, '-translate-y-full': hidden }">
+  <div class="border-b border-border bg-surface/95 backdrop-blur-md">
+    <div class="rkn-container flex items-center gap-3 transition-all duration-300" :class="scrolled ? 'h-16' : 'h-[var(--rkn-header-height)]'">
+
+      <button class="rkn-btn rkn-btn--ghost rkn-btn--icon lg:hidden" @click="$store.ui.toggle('mobileNav')" aria-label="{{ trans('common.menu')|default('القائمة') }}">
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+
+      <a href="{{ url.home|default('/') }}" class="flex shrink-0 items-center gap-2" aria-label="{{ store.name }}">
+        {% if store.logo %}
+          <img src="{{ store.logo }}" alt="{{ store.name }}" class="h-9 w-auto" width="140" height="36">
+        {% else %}
+          <span class="text-xl font-extrabold tracking-tight text-content">{{ store.name|default('RKN') }}</span>
+        {% endif %}
+      </a>
+
+      {# Search (desktop) #}
+      <div class="relative hidden flex-1 md:block" x-data="rknSearch" @click.outside="open = false">
+        <form role="search" @submit.prevent="submit()" class="relative">
+          <label for="rkn-search" class="sr-only">{{ trans('common.search')|default('بحث') }}</label>
+          <span class="pointer-events-none absolute inset-block-0 inset-inline-start-0 flex items-center ps-3.5 text-content-subtle">
+            <svg class="size-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>
+          </span>
+          <input id="rkn-search" type="search" autocomplete="off" class="rkn-input h-12 rounded-full ps-11 pe-4"
+                 placeholder="{{ trans('search.placeholder')|default('ابحث عن كاميرات، أنظمة، شبكات…') }}"
+                 x-model="q" @input="onInput()" @focus="open = q.length > 1" role="combobox" :aria-expanded="open" aria-controls="rkn-search-panel" aria-autocomplete="list">
+        </form>
+        <div id="rkn-search-panel" x-show="open" x-cloak x-transition.opacity role="listbox"
+             class="absolute inset-block-start-full inset-inline-0 z-dropdown mt-2 overflow-hidden rounded-xl border border-border bg-surface shadow-xl">
+          <template x-if="loading"><div class="p-4 space-y-2"><div class="rkn-skeleton h-4 w-full"></div><div class="rkn-skeleton h-4 w-4/5"></div></div></template>
+          <template x-if="!loading && results.length">
+            <ul class="max-h-80 divide-y divide-border overflow-auto">
+              <template x-for="p in results" :key="p.id">
+                <li role="option"><a :href="p.url" class="flex items-center gap-3 p-3 transition hover:bg-surface-sunken">
+                  <img :src="p.image" :alt="p.name" class="size-12 rounded-lg border border-border object-cover" loading="lazy" width="48" height="48">
+                  <span class="min-w-0 flex-1"><span class="block truncate text-sm font-medium text-content" x-text="p.name"></span><span class="block text-sm font-semibold text-primary-600" x-text="p.price"></span></span>
+                </a></li>
+              </template>
+            </ul>
+          </template>
+          <template x-if="!loading && q.length > 1 && !results.length"><p class="p-6 text-center text-sm text-content-muted">{{ trans('search.no_results')|default('لا توجد نتائج') }}</p></template>
+          <button class="block w-full border-t border-border bg-surface-sunken p-3 text-center text-sm font-semibold text-primary-700 hover:bg-primary-50" @click="submit()">{{ trans('search.view_all_results')|default('عرض كل النتائج') }}</button>
+        </div>
+      </div>
+
+      {# Actions #}
+      <div class="flex shrink-0 items-center gap-0.5 ms-auto md:ms-0">
+        <button class="rkn-btn rkn-btn--ghost rkn-btn--icon md:hidden" @click="$store.ui.toggle('search')" aria-label="{{ trans('common.search')|default('بحث') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg>
+        </button>
+
+        {% if theme.settings.show_compare|default(true) %}
+        <a href="{{ url.get('compare')|default('/compare') }}" class="rkn-btn rkn-btn--ghost rkn-btn--icon relative hidden sm:inline-flex" aria-label="{{ trans('product.compare')|default('قارن') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3v18M17 3v18M3 8h8M13 16h8"/></svg>
+          <span x-show="$store.compare.count > 0" x-cloak x-text="$store.compare.count" class="absolute inset-block-start-0 inset-inline-end-1 grid min-w-5 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-white"></span>
+        </a>
+        {% endif %}
+
+        <a href="{{ url.get('wishlist')|default('/wishlist') }}" class="rkn-btn rkn-btn--ghost rkn-btn--icon relative hidden sm:inline-flex" aria-label="{{ trans('account.wishlist')|default('المفضلة') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.6-9.2-8.4C1 8.4 2.7 5 6 5c2 0 3.2 1.2 4 2.3C10.8 6.2 12 5 14 5c3.3 0 5 3.4 3.2 6.6C19 15.4 12 20 12 20z"/></svg>
+          <span x-show="$store.badges.wishlist > 0" x-cloak x-text="$store.badges.wishlist" class="absolute inset-block-start-0 inset-inline-end-1 grid min-w-5 place-items-center rounded-full bg-danger-600 px-1 text-[10px] font-bold text-white"></span>
+        </a>
+
+        <a href="{{ user ? (url.get('profile')|default('/profile')) : (url.get('auth.login')|default('/login')) }}" class="rkn-btn rkn-btn--ghost rkn-btn--icon" aria-label="{{ trans('account.my_account')|default('حسابي') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        </a>
+
+        <button class="rkn-btn rkn-btn--ghost rkn-btn--icon relative" @click="$dispatch('rkn:open-cart')" aria-label="{{ trans('cart.title')|default('سلة المشتريات') }}">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/></svg>
+          <span x-show="$store.badges.cart > 0" x-cloak x-text="$store.badges.cart" class="absolute inset-block-start-0 inset-inline-end-1 grid min-w-5 place-items-center rounded-full bg-primary-600 px-1 text-[10px] font-bold text-white"></span>
+        </button>
+      </div>
+    </div>
+
+    {# Desktop mega navigation #}
+    <div class="border-t border-border bg-surface" :class="scrolled && 'hidden'">
+      <div class="rkn-container">
+        {% include 'components.mega-menu' with { menu: menu } %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{# Mobile search sheet #}
+<div x-data x-show="$store.ui.search" x-cloak class="fixed inset-block-start-0 inset-inline-0 z-modal bg-surface p-4 shadow-lg md:hidden" x-transition @keydown.escape.window="$store.ui.close('search')">
+  <div class="flex items-center gap-2" x-data="rknSearch" @click.outside="open = false">
+    <form role="search" class="relative flex-1" @submit.prevent="submit()">
+      <input type="search" class="rkn-input h-11 rounded-full" x-model="q" @input="onInput()" placeholder="{{ trans('search.placeholder')|default('ابحث…') }}" aria-label="{{ trans('common.search')|default('بحث') }}">
+    </form>
+    <button class="rkn-btn rkn-btn--ghost" @click="$store.ui.close('search')">{{ trans('common.close')|default('إغلاق') }}</button>
+  </div>
+</div>
+
+{# Mobile off-canvas navigation #}
+<div x-data="rknMobileNav" x-show="$store.ui.mobileNav" x-cloak class="lg:hidden" @keydown.escape.window="$store.ui.close('mobileNav')">
+  <div class="rkn-overlay" x-show="$store.ui.mobileNav" x-transition.opacity @click="$store.ui.close('mobileNav')"></div>
+  <div class="fixed inset-block-0 inset-inline-start-0 z-drawer flex w-[86%] max-w-sm flex-col bg-surface shadow-2xl"
+       x-show="$store.ui.mobileNav"
+       x-transition:enter="transition ease-emphasized duration-300" x-transition:enter-start="-translate-x-full rtl:translate-x-full" x-transition:enter-end="translate-x-0"
+       x-transition:leave="transition ease-exit duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full rtl:translate-x-full"
+       x-trap.noscroll="$store.ui.mobileNav" role="dialog" aria-modal="true" aria-label="{{ trans('common.menu')|default('القائمة') }}">
+    <div class="flex items-center justify-between border-b border-border p-4">
+      <span class="text-base font-bold">{{ trans('common.menu')|default('القائمة') }}</span>
+      <button class="rkn-btn rkn-btn--ghost rkn-btn--icon" @click="$store.ui.close('mobileNav')" aria-label="{{ trans('common.close')|default('إغلاق') }}">
+        <svg class="size-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l8 8M14 6l-8 8"/></svg>
+      </button>
+    </div>
+    <nav class="flex-1 overflow-y-auto p-2" aria-label="{{ trans('nav.primary')|default('التنقل') }}">
+      <ul class="space-y-0.5">
+        {% for item in menu %}
+          {% set children = item.children|default(item.items)|default([]) %}
+          <li>
+            {% if children is not empty %}
+              <button class="rkn-navlink w-full justify-between" @click="toggle('m{{ loop.index }}')" :aria-expanded="expanded === 'm{{ loop.index }}'">
+                {{ item.title|default(item.name) }}
+                <svg class="size-4 transition" :class="expanded === 'm{{ loop.index }}' && 'rotate-180'" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 5 5-5z"/></svg>
+              </button>
+              <div x-show="expanded === 'm{{ loop.index }}'" x-collapse class="ps-3">
+                {% for child in children %}
+                  <a href="{{ child.url|default('#') }}" class="rkn-navlink w-full justify-start text-content-muted">{{ child.title|default(child.name) }}</a>
+                {% endfor %}
+              </div>
+            {% else %}
+              <a href="{{ item.url|default('#') }}" class="rkn-navlink w-full justify-start">{{ item.title|default(item.name) }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+</div>

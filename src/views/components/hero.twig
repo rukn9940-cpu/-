@@ -1,0 +1,44 @@
+{% set slides = slides|default(theme.settings.hero_slides)|default([
+  { title: 'حماية احترافية لمنشأتك', subtitle: 'أنظمة كاميرات مراقبة وحلول أمنية متكاملة بأعلى المعايير العالمية.', cta_label: 'تسوّق الآن', cta_url: '/products', image: '' },
+  { title: 'كاميرات تعمل بالطاقة الشمسية', subtitle: 'مراقبة على مدار الساعة دون كهرباء أو أسلاك.', cta_label: 'اكتشف المجموعة', cta_url: '/categories', image: '' },
+  { title: 'حلول الأعمال والمشاريع', subtitle: 'تصميم وتركيب أنظمة أمنية للشركات والمنشآت الكبرى.', cta_label: 'اطلب عرض سعر', cta_url: '/business', image: '' }
+]) %}
+
+<section class="rkn-container py-4" aria-roledescription="carousel" aria-label="{{ trans('home.hero')|default('العروض الرئيسية') }}"
+         x-data="rknHeroSlider({{ slides|length }})" @mouseenter="pause()" @mouseleave="play()" @focusin="pause()" @focusout="play()">
+  <div class="relative overflow-hidden rounded-2xl">
+    <div x-ref="track" class="rkn-carousel__track snap-x snap-mandatory">
+      {% for slide in slides %}
+        <div class="w-full shrink-0 snap-center" role="group" aria-roledescription="slide" aria-label="{{ loop.index }} / {{ slides|length }}">
+          <div class="relative overflow-hidden bg-accent text-content-inverse">
+            {% if slide.image %}
+              <img src="{{ slide.image }}" alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover opacity-60" {{ loop.first ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"' }}>
+              <span class="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/50 to-transparent"></span>
+            {% endif %}
+            <div class="relative flex min-h-[340px] flex-col items-start justify-center px-6 py-12 md:min-h-[460px] md:px-14">
+              <div class="max-w-xl">
+                <h2 class="text-3xl font-extrabold leading-tight md:text-5xl">{{ slide.title }}</h2>
+                {% if slide.subtitle %}<p class="mt-4 text-base text-content-inverse/85 md:text-lg">{{ slide.subtitle }}</p>{% endif %}
+                {% if slide.cta_label %}<a href="{{ slide.cta_url|default('#') }}" class="rkn-btn rkn-btn--primary rkn-btn--lg mt-7">{{ slide.cta_label }}</a>{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if slides|length > 1 %}
+      <button class="absolute inset-block-1/2 inset-inline-start-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-surface/80 text-content shadow-md backdrop-blur transition hover:bg-surface" @click="prev()" aria-label="{{ trans('common.previous')|default('السابق') }}">
+        <svg class="size-5 rkn-flip-rtl" viewBox="0 0 20 20" fill="currentColor"><path d="M12.5 4l-6 6 6 6 1.4-1.4L9.3 10l4.6-4.6z"/></svg>
+      </button>
+      <button class="absolute inset-block-1/2 inset-inline-end-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-surface/80 text-content shadow-md backdrop-blur transition hover:bg-surface" @click="next()" aria-label="{{ trans('common.next')|default('التالي') }}">
+        <svg class="size-5 rkn-flip-rtl" viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 4L6.1 5.4 10.7 10l-4.6 4.6L7.5 16l6-6z"/></svg>
+      </button>
+      <div class="absolute inset-block-end-4 inset-inline-0 flex justify-center gap-2">
+        {% for slide in slides %}
+          <button class="size-2.5 rounded-full transition" :class="active === {{ loop.index0 }} ? 'bg-white w-6' : 'bg-white/50'" @click="go({{ loop.index0 }})" aria-label="{{ loop.index }}"></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>

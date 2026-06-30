@@ -1,0 +1,47 @@
+{% set menu = menu|default([]) %}
+<nav class="hidden lg:block" x-data="rknMegaMenu" @keydown.escape="close()" aria-label="{{ trans('nav.primary')|default('التنقل الرئيسي') }}">
+  <ul class="flex items-center gap-1">
+    {% for item in menu %}
+      {% set children = item.children|default(item.items)|default([]) %}
+      {% set hasPanel = children is not empty %}
+      <li class="static" @mouseenter="{{ hasPanel ? "open('p#{loop.index}')" : '' }}" @mouseleave="scheduleClose()">
+        <a href="{{ item.url|default('#') }}" class="rkn-navlink"
+           {% if hasPanel %}@focus="open('p{{ loop.index }}')" @keydown.enter.prevent="open('p{{ loop.index }}')" @keydown.arrow-down.prevent="open('p{{ loop.index }}')" :aria-expanded="isOpen('p{{ loop.index }}')" aria-haspopup="true"{% endif %}>
+          {{ item.title|default(item.name) }}
+          {% if hasPanel %}<svg class="size-4 text-content-subtle" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 5 5-5z"/></svg>{% endif %}
+        </a>
+
+        {% if hasPanel %}
+          <div x-show="isOpen('p{{ loop.index }}')" x-cloak
+               x-transition:enter="transition ease-entrance duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+               @mouseenter="open('p{{ loop.index }}')" @mouseleave="scheduleClose()"
+               class="absolute inset-inline-0 inset-block-start-full z-dropdown mt-1 border-t border-border bg-surface shadow-xl">
+            <div class="rkn-container grid grid-cols-12 gap-8 py-8">
+              <div class="col-span-9 grid grid-cols-4 gap-x-8 gap-y-6">
+                {% for child in children %}
+                  {% set sub = child.children|default(child.items)|default([]) %}
+                  <div>
+                    <h3 class="mb-3 text-sm font-bold text-content"><a href="{{ child.url|default('#') }}" class="hover:text-primary-700">{{ child.title|default(child.name) }}</a></h3>
+                    {% if sub is not empty %}
+                      <ul class="space-y-1.5">
+                        {% for leaf in sub %}
+                          <li><a href="{{ leaf.url|default('#') }}" class="block text-sm text-content-muted transition hover:text-primary-700">{{ leaf.title|default(leaf.name) }}</a></li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+              {% if item.image %}
+                <a href="{{ item.url|default('#') }}" class="group col-span-3 relative overflow-hidden rounded-xl bg-surface-sunken">
+                  <img src="{{ item.image }}" alt="{{ item.title|default(item.name) }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                  <span class="absolute inset-block-end-0 inset-inline-0 bg-gradient-to-t from-slate-950/80 to-transparent p-4"><span class="text-base font-bold text-white">{{ item.title|default(item.name) }}</span></span>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

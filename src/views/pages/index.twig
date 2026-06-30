@@ -1,117 +1,95 @@
-{#
-  pages/index.twig — Homepage
-  @summary  Premium security-systems storefront homepage. Sections 1–3
-            (announcement, header, mega nav) and 22–23 (newsletter, footer)
-            are provided by the layout/footer; this template composes 4–21.
-  @data     Hero slides, category lists, "why choose", brands, testimonials,
-            blog teasers and FAQ default to sensible Arabic content and are
-            overridable from theme settings / Salla data. Product collections
-            render via products-section (our cards when data is passed; Salla
-            products-slider by source otherwise).
-  @seo      ItemList-friendly section headings; FAQ emits FAQPage JSON-LD.
-#}
-{% extends 'layouts/master.twig' %}
+{% extends 'layouts.master' %}
 
 {% block content %}
 
-{# ---- 4 · Hero banner / slider ---------------------------------------- #}
-{% set hero_slides = hero_slides|default([
-  { title: 'حماية احترافية لمنشأتك', subtitle: 'أنظمة كاميرات مراقبة وحلول أمنية متكاملة بأعلى المعايير العالمية.', image: '', ctaLabel: 'تسوّق الآن', ctaHref: '/products', align: 'start' },
-  { title: 'كاميرات تعمل بالطاقة الشمسية', subtitle: 'مراقبة 24/7 دون الحاجة لكهرباء أو أسلاك.', image: '', ctaLabel: 'اكتشف المجموعة', ctaHref: '/categories', align: 'start' },
-  { title: 'حلول الأعمال والمشاريع', subtitle: 'تصميم وتركيب أنظمة أمنية للشركات والمنشآت الكبرى.', image: '', ctaLabel: 'اطلب عرض سعر', ctaHref: '/business', align: 'start' }
-]) %}
-{% include 'components/common/hero-slider.twig' with { slides: hero_slides } %}
+{% include 'components.hero' %}
 
-{# ---- 5 · Shop by category -------------------------------------------- #}
-{% set shop_categories = shop_categories|default([
-  { name: 'كاميرات IP', url: '/categories/ip', image: '' },
-  { name: 'كاميرات واي فاي', url: '/categories/wifi', image: '' },
-  { name: 'كاميرات شمسية', url: '/categories/solar', image: '' },
-  { name: 'كاميرات 4G', url: '/categories/4g', image: '' },
-  { name: 'أجهزة NVR', url: '/categories/nvr', image: '' },
-  { name: 'أجهزة DVR', url: '/categories/dvr', image: '' },
-  { name: 'كنترول أكسس', url: '/categories/access-control', image: '' },
-  { name: 'إنتركم', url: '/categories/intercom', image: '' },
-  { name: 'شبكات', url: '/categories/networking', image: '' },
-  { name: 'هاردات تخزين', url: '/categories/storage', image: '' }
-]) %}
+{# Shop by category — renders real store categories when available #}
+{% set categories = categories|default(theme.settings.home_categories)|default([]) %}
+{% if categories is not empty %}
 <section class="rkn-section" aria-label="{{ trans('home.shop_by_category')|default('تسوّق حسب القسم') }}">
   <div class="rkn-container">
-    <h2 class="mb-6 text-xl font-extrabold text-content md:text-2xl">{{ trans('home.shop_by_category')|default('تسوّق حسب القسم') }}</h2>
-    <div class="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-10">
-      {% for category in shop_categories %}
-        {% include 'components/category/category-card.twig' with { category: category, variant: 'tile' } only %}
+    <div class="mb-6 flex items-end justify-between">
+      <h2 class="text-xl font-extrabold text-content md:text-2xl">{{ trans('home.shop_by_category')|default('تسوّق حسب القسم') }}</h2>
+      <a href="{{ url.get('categories')|default('/categories') }}" class="rkn-btn rkn-btn--ghost rkn-btn--sm">{{ trans('common.view_all')|default('عرض الكل') }}</a>
+    </div>
+    <div class="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+      {% for category in categories %}
+        {% include 'components.category-card' with { category: category, variant: 'tile' } %}
       {% endfor %}
     </div>
   </div>
 </section>
+{% endif %}
 
-{# ---- 6 · Featured categories ----------------------------------------- #}
-{% set featured_categories = featured_categories|default([
-  { name: 'أنظمة المراقبة المتكاملة', url: '/categories/systems', image: '', products_count: 120 },
-  { name: 'الكاميرات الشمسية', url: '/categories/solar', image: '', products_count: 45 },
-  { name: 'أنظمة الدخول والتحكم', url: '/categories/access-control', image: '', products_count: 60 }
-]) %}
-<section class="rkn-section pt-0" aria-label="{{ trans('home.featured_categories')|default('أقسام مميزة') }}">
-  <div class="rkn-container grid gap-4 md:grid-cols-3">
-    {% for category in featured_categories %}
-      {% include 'components/category/category-card.twig' with { category: category, variant: 'overlay' } only %}
-    {% endfor %}
+{# Flash deals #}
+<section class="rkn-section" aria-label="{{ trans('home.flash_deals')|default('عروض سريعة') }}">
+  <div class="rkn-container">
+    <div class="mb-6 flex items-center gap-3">
+      <span class="grid size-11 place-items-center rounded-xl bg-secondary-50 text-secondary-700">
+        <svg class="size-6" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg>
+      </span>
+      <h2 class="text-xl font-extrabold text-content md:text-2xl">{{ trans('home.flash_deals')|default('عروض سريعة') }}</h2>
+    </div>
+    <salla-products-slider source="offers" source-value="{{ theme.settings.collection_offers|default('') }}" limit="12"></salla-products-slider>
   </div>
 </section>
 
-{# ---- 7 · Flash deals ------------------------------------------------- #}
-{% include 'components/product/products-section.twig' with {
-  title: trans('home.flash_deals')|default('عروض سريعة'),
-  subtitle: trans('home.flash_deals_sub')|default('خصومات لفترة محدودة'),
-  icon: 'star', source: 'offers', products: flash_deals|default([]),
-  viewAllUrl: '/offers'
-} %}
+{# Best sellers #}
+<section class="rkn-section bg-surface-sunken" aria-label="{{ trans('home.best_sellers')|default('الأكثر مبيعًا') }}">
+  <div class="rkn-container">
+    <h2 class="mb-6 text-xl font-extrabold text-content md:text-2xl">{{ trans('home.best_sellers')|default('الأكثر مبيعًا') }}</h2>
+    <salla-products-slider source="sales" limit="12"></salla-products-slider>
+  </div>
+</section>
 
-{# ---- 8 · Best sellers ------------------------------------------------ #}
-{% include 'components/product/products-section.twig' with {
-  title: trans('home.best_sellers')|default('الأكثر مبيعًا'),
-  source: 'sales', products: best_sellers|default([]), viewAllUrl: '/products?sort=sales'
-} %}
-
-{# ---- 9–14 · Category collections ------------------------------------- #}
+{# Category collections #}
 {% set collections = [
-  { title: 'كاميرات IP', key: 'ip', url: '/categories/ip' },
-  { title: 'الكاميرات الشمسية', key: 'solar', url: '/categories/solar' },
-  { title: 'كاميرات 4G', key: '4g', url: '/categories/4g' },
-  { title: 'كاميرات واي فاي', key: 'wifi', url: '/categories/wifi' },
-  { title: 'أجهزة NVR و DVR', key: 'nvr', url: '/categories/nvr-dvr' },
-  { title: 'الإكسسوارات وهاردات التخزين', key: 'accessories', url: '/categories/accessories' }
+  { title: trans('cat.ip')|default('كاميرات IP'), key: 'collection_ip' },
+  { title: trans('cat.solar')|default('الكاميرات الشمسية'), key: 'collection_solar' },
+  { title: trans('cat.4g')|default('كاميرات 4G'), key: 'collection_4g' },
+  { title: trans('cat.wifi')|default('كاميرات واي فاي'), key: 'collection_wifi' },
+  { title: trans('cat.nvr')|default('أجهزة NVR و DVR'), key: 'collection_nvr' },
+  { title: trans('cat.accessories')|default('الإكسسوارات وهاردات التخزين'), key: 'collection_accessories' }
 ] %}
 {% for col in collections %}
-  {% include 'components/product/products-section.twig' with {
-    title: col.title,
-    source: 'categories',
-    sourceValue: attribute(theme.settings, 'collection_' ~ col.key)|default(''),
-    viewAllUrl: col.url
-  } %}
+  {% set cid = attribute(theme.settings, col.key)|default('') %}
+  {% if cid %}
+    <section class="rkn-section" aria-label="{{ col.title }}">
+      <div class="rkn-container">
+        <h2 class="mb-6 text-xl font-extrabold text-content md:text-2xl">{{ col.title }}</h2>
+        <salla-products-slider source="categories" source-value="{{ cid }}" limit="12"></salla-products-slider>
+      </div>
+    </section>
+  {% endif %}
 {% endfor %}
 
-{# ---- 15 · Business solutions banner ---------------------------------- #}
-{% include 'components/common/cta-section.twig' with {
-  title: trans('home.business_title')|default('حلول أمنية للأعمال والمشاريع'),
-  subtitle: trans('home.business_sub')|default('تصميم وتوريد وتركيب أنظمة المراقبة للشركات والمنشآت بعقود صيانة متكاملة.'),
-  ctaLabel: trans('home.request_quote')|default('اطلب عرض سعر'),
-  ctaHref: '/business', variant: 'accent'
-} %}
+{# Business solutions banner #}
+<section class="rkn-section">
+  <div class="rkn-container">
+    <div class="relative overflow-hidden rounded-2xl bg-accent px-6 py-12 text-center text-content-inverse md:px-12 md:py-16">
+      <div class="pointer-events-none absolute -inset-block-start-16 -inset-inline-end-16 size-64 rounded-full bg-white/10 blur-2xl"></div>
+      <div class="relative mx-auto max-w-2xl">
+        <h2 class="text-2xl font-extrabold md:text-4xl">{{ trans('home.business_title')|default('حلول أمنية للأعمال والمشاريع') }}</h2>
+        <p class="mt-3 text-content-inverse/85">{{ trans('home.business_sub')|default('تصميم وتوريد وتركيب أنظمة المراقبة للشركات والمنشآت بعقود صيانة متكاملة.') }}</p>
+        <a href="{{ url.get('business')|default('/business') }}" class="rkn-btn rkn-btn--secondary rkn-btn--lg mt-7">{{ trans('home.request_quote')|default('اطلب عرض سعر') }}</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-{# ---- 16 · Installation services banner ------------------------------- #}
+{# Installation services banner #}
 <section class="rkn-section">
   <div class="rkn-container">
     <div class="grid items-center gap-6 overflow-hidden rounded-2xl border border-border bg-surface p-6 md:grid-cols-2 md:p-10">
       <div>
-        <span class="rkn-badge rkn-badge--primary">{{ trans('nav.installation') }}</span>
+        <span class="rkn-badge rkn-badge--primary">{{ trans('nav.installation')|default('خدمات التركيب') }}</span>
         <h2 class="mt-3 text-2xl font-extrabold text-content md:text-3xl">{{ trans('home.install_title')|default('خدمة تركيب احترافية معتمدة') }}</h2>
         <p class="mt-3 text-content-muted">{{ trans('home.install_sub')|default('فنيون معتمدون، ضمان على التركيب، ومواعيد مرنة في جميع مناطق المملكة.') }}</p>
-        <a href="/installation" class="rkn-btn rkn-btn--primary rkn-btn--lg mt-6">{{ trans('home.book_installation')|default('احجز موعد تركيب') }}</a>
+        <a href="{{ url.get('installation')|default('/installation') }}" class="rkn-btn rkn-btn--primary rkn-btn--lg mt-6">{{ trans('home.book_installation')|default('احجز موعد تركيب') }}</a>
       </div>
       <div class="grid grid-cols-3 gap-3 text-center">
-        {% for stat in [{n:'+5000', l:'عملية تركيب'}, {n:'24/7', l:'دعم فني'}, {n:'+10', l:'سنوات خبرة'}] %}
+        {% for stat in [{ n: '+5000', l: trans('home.stat_installs')|default('عملية تركيب') }, { n: '24/7', l: trans('home.stat_support')|default('دعم فني') }, { n: '+10', l: trans('home.stat_years')|default('سنوات خبرة') }] %}
           <div class="rounded-xl bg-surface-sunken p-4">
             <p class="text-xl font-extrabold text-primary-700">{{ stat.n }}</p>
             <p class="mt-1 text-xs text-content-muted">{{ stat.l }}</p>
@@ -122,73 +100,29 @@
   </div>
 </section>
 
-{# ---- 17 · Why choose RKN --------------------------------------------- #}
+{# Why choose RKN #}
 <section class="rkn-section bg-surface-sunken" aria-label="{{ trans('home.why_choose')|default('لماذا ركن الاحتراف؟') }}">
   <div class="rkn-container">
     <div class="mb-8 text-center">
       <h2 class="text-2xl font-extrabold text-content md:text-3xl">{{ trans('home.why_choose')|default('لماذا ركن الاحتراف؟') }}</h2>
       <p class="mx-auto mt-2 max-w-2xl text-content-muted">{{ trans('home.why_choose_sub')|default('شريكك الموثوق في حلول الأمن والمراقبة بالمملكة العربية السعودية.') }}</p>
     </div>
-    {% include 'components/trust/trust-badges.twig' with { layout: 'grid' } only %}
-  </div>
-</section>
-
-{# ---- 18 · Brand logos ------------------------------------------------ #}
-{% set brands = brands|default([]) %}
-{% if brands is not empty %}
-  {% include 'components/common/brand-slider.twig' with { brands: brands, title: trans('home.our_brands')|default('علاماتنا التجارية') } %}
-{% endif %}
-
-{# ---- 19 · Customer reviews ------------------------------------------- #}
-{% set testimonials = testimonials|default([
-  { author: 'عبدالله الشمري', role: 'صاحب منشأة تجارية', rating: 5, body: 'جودة المنتجات والتركيب فاقت توقعاتي، فريق محترف ودعم سريع.' },
-  { author: 'سارة العتيبي', role: 'عميلة', rating: 5, body: 'الكاميرات الشمسية ممتازة وسهلة التركيب، والتطبيق واضح.' },
-  { author: 'محمد القحطاني', role: 'مدير مشاريع', rating: 5, body: 'تعاملنا معهم في مشروع كبير، الالتزام بالمواعيد والاحترافية عالية.' }
-]) %}
-<section class="rkn-section" aria-label="{{ trans('home.reviews')|default('آراء عملائنا') }}">
-  <div class="rkn-container">
-    <h2 class="mb-6 text-xl font-extrabold text-content md:text-2xl">{{ trans('home.reviews')|default('آراء عملائنا') }}</h2>
-    <div class="grid gap-4 md:grid-cols-3">
-      {% for testimonial in testimonials %}
-        {% include 'components/common/testimonial-card.twig' with { testimonial: testimonial } only %}
+    <ul class="grid grid-cols-2 gap-4 md:grid-cols-4">
+      {% set features = [
+        { icon: 'shield', t: trans('trust.warranty')|default('ضمان معتمد'), d: trans('trust.warranty_text')|default('ضمان رسمي على جميع المنتجات') },
+        { icon: 'badge-check', t: trans('trust.authentic')|default('منتجات أصلية'), d: trans('trust.authentic_text')|default('منتجات أصلية 100%') },
+        { icon: 'lock', t: trans('trust.secure_checkout')|default('دفع آمن'), d: trans('trust.secure_text')|default('دفع آمن ومشفّر') },
+        { icon: 'tool', t: trans('trust.installation_available')|default('تركيب احترافي'), d: trans('trust.installation_text')|default('تركيب معتمد بضمان') }
+      ] %}
+      {% for f in features %}
+        <li class="flex flex-col items-center gap-2 rounded-xl border border-border bg-surface p-5 text-center">
+          <span class="grid size-12 place-items-center rounded-full bg-primary-50 text-primary-600"><svg class="size-6" aria-hidden="true"><use href="#icon-{{ f.icon }}"></use></svg></span>
+          <span class="text-sm font-bold text-content">{{ f.t }}</span>
+          <span class="text-xs text-content-muted">{{ f.d }}</span>
+        </li>
       {% endfor %}
-    </div>
+    </ul>
   </div>
 </section>
 
-{# ---- 20 · Educational blog ------------------------------------------- #}
-{% set blog_posts = blog_posts|default([]) %}
-{% if blog_posts is not empty %}
-<section class="rkn-section bg-surface-sunken" aria-label="{{ trans('home.blog')|default('المدونة التعليمية') }}">
-  <div class="rkn-container">
-    <div class="mb-6 flex items-end justify-between">
-      <h2 class="text-xl font-extrabold text-content md:text-2xl">{{ trans('home.blog')|default('المدونة التعليمية') }}</h2>
-      <a href="/blog" class="rkn-btn rkn-btn--ghost rkn-btn--sm">{{ trans('common.view_all') }}</a>
-    </div>
-    <div class="grid gap-4 md:grid-cols-3">
-      {% for article in blog_posts|slice(0, 3) %}
-        {% include 'components/common/blog-card.twig' with { article: article } only %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
-
-{# ---- 21 · FAQ preview ------------------------------------------------ #}
-{% set faqs = faqs|default([
-  { q: 'هل توفرون خدمة التركيب؟', a: 'نعم، نوفر خدمة تركيب احترافية معتمدة في جميع مناطق المملكة مع ضمان على التركيب.' },
-  { q: 'ما مدة الضمان على المنتجات؟', a: 'جميع منتجاتنا أصلية وتأتي بضمان رسمي يختلف حسب المنتج والعلامة التجارية.' },
-  { q: 'هل الكاميرات الشمسية تعمل ليلًا؟', a: 'نعم، تعمل على مدار الساعة بتقنية الرؤية الليلية وبطارية مدمجة تشحن نهارًا.' },
-  { q: 'هل أستطيع المراقبة عبر الجوال؟', a: 'بالتأكيد، جميع الأنظمة تدعم المراقبة المباشرة عبر تطبيقات الجوال.' }
-]) %}
-<section class="rkn-section" aria-label="{{ trans('home.faq')|default('الأسئلة الشائعة') }}">
-  <div class="rkn-container max-w-3xl">
-    {% include 'components/common/faq.twig' with { items: faqs, title: trans('home.faq')|default('الأسئلة الشائعة') } only %}
-    <div class="mt-6 text-center">
-      <a href="/faq" class="rkn-btn rkn-btn--outline">{{ trans('home.all_faqs')|default('عرض كل الأسئلة') }}</a>
-    </div>
-  </div>
-</section>
-
-{# ---- 22 Newsletter + 23 Footer are rendered by the footer component --- #}
 {% endblock %}

@@ -1,0 +1,27 @@
+{% set c = category %}
+{% set name = c.name|default(c.title) %}
+{% set link = c.url|default(c.urls.customer)|default('#') %}
+{% set image = c.image|default(c.banner)|default('') %}
+
+{% if variant|default('tile') == 'overlay' %}
+  <a href="{{ link }}" class="group relative block aspect-[4/3] overflow-hidden rounded-xl bg-surface-sunken">
+    {% if image %}<img src="{{ image }}" alt="{{ name }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">{% endif %}
+    <span class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/10 to-transparent"></span>
+    <span class="absolute inset-block-end-0 inset-inline-0 p-4">
+      <span class="block text-base font-bold text-white">{{ name }}</span>
+      {% if c.products_count is defined %}<span class="text-xs text-white/80">{{ c.products_count }} {{ trans('category.products')|default('منتج') }}</span>{% endif %}
+    </span>
+  </a>
+{% else %}
+  <a href="{{ link }}" class="rkn-card rkn-card--interactive group flex flex-col items-center p-5 text-center">
+    <span class="mb-3 flex size-20 items-center justify-center overflow-hidden rounded-full bg-primary-50">
+      {% if image %}
+        <img src="{{ image }}" alt="{{ name }}" loading="lazy" class="size-14 object-contain transition duration-300 group-hover:scale-110">
+      {% else %}
+        <svg class="size-9 text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="6" width="14" height="10" rx="2"/><path d="M17 10l4-2v8l-4-2"/></svg>
+      {% endif %}
+    </span>
+    <span class="text-sm font-semibold text-content group-hover:text-primary-700">{{ name }}</span>
+    {% if c.products_count is defined %}<span class="mt-0.5 text-xs text-content-subtle">{{ c.products_count }}</span>{% endif %}
+  </a>
+{% endif %}

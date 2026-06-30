@@ -1,120 +1,60 @@
-{#
-  master.twig — RKN Premium Theme document shell
-  @summary  Root layout: <head> (SEO/meta/fonts), RTL/dir, theme tokens, header/
-            footer slots, skip link, JSON-LD base. Pages extend this layout.
-  @phase    2 — shell only; header/footer partials are filled in Phase 3.
-  @a11y     skip link, single <main> landmark, lang/dir set on <html>.
-
-  Blocks pages override:
-    {% block title %}     — page <title>
-    {% block meta %}      — extra meta / canonical / og overrides
-    {% block before_content %} / {% block content %} / {% block after_content %}
-#}
-{% set lang = store.language|default('ar') %}
-{% set dir  = trans('dir')|default(lang == 'ar' ? 'rtl' : 'ltr') %}
+{% set dir = trans('dir')|default('rtl') %}
 {% set theme_mode = theme.settings.enable_dark_mode|default(false) ? 'dark' : 'light' %}
 <!DOCTYPE html>
-<html
-  lang="{{ lang }}"
-  dir="{{ dir }}"
-  data-theme="{{ theme_mode }}"
-  data-numerals="{{ theme.settings.numerals|default('western') }}"
->
+<html lang="{{ request.locale|default('ar') }}" dir="{{ dir }}" data-theme="{{ theme_mode }}" data-numerals="{{ theme.settings.numerals|default('western') }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0057FF">
+  <meta name="theme-color" content="{{ theme.settings.color_primary|default('#0057FF') }}">
   <meta name="format-detection" content="telephone=no">
 
   <title>{% block title %}{{ page.title|default(store.name) }}{% endblock %}</title>
 
-  {# --- SEO base --------------------------------------------------------- #}
-  {% block meta %}
+  {% block seo %}
     <meta name="description" content="{{ page.description|default(store.description) }}">
     <link rel="canonical" href="{{ page.canonical|default(url.current) }}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="{{ store.name }}">
     <meta property="og:title" content="{{ page.title|default(store.name) }}">
     <meta property="og:description" content="{{ page.description|default(store.description) }}">
-    <meta property="og:locale" content="{{ lang == 'ar' ? 'ar_SA' : 'en_US' }}">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:locale" content="{{ request.locale == 'en' ? 'en_US' : 'ar_SA' }}">
     {% if store.logo %}<meta property="og:image" content="{{ store.logo }}">{% endif %}
-    {# hreflang for ar/en #}
-    <link rel="alternate" hreflang="ar" href="{{ url.locale('ar')|default(url.current) }}">
-    <link rel="alternate" hreflang="en" href="{{ url.locale('en')|default(url.current) }}">
-    <link rel="alternate" hreflang="x-default" href="{{ url.current }}">
+    <meta name="twitter:card" content="summary_large_image">
   {% endblock %}
 
-  {# --- Fonts: preconnect + display swap (premium Arabic + Latin pairing) - #}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"
-  >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 
-  {# --- Structured data: Organization + WebSite + SearchAction ----------- #}
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Organization",
-        "name": "{{ store.name }}",
-        "url": "{{ url.home|default(url.current) }}"{% if store.logo %},
-        "logo": "{{ store.logo }}"{% endif %}
-      },
-      {
-        "@type": "WebSite",
-        "name": "{{ store.name }}",
-        "url": "{{ url.home|default(url.current) }}",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "{{ url.home|default('/') }}?s={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
-      }
+      { "@type": "Organization", "name": {{ store.name|json_encode|raw }}, "url": {{ (url.home|default(url.current))|json_encode|raw }}{% if store.logo %}, "logo": {{ store.logo|json_encode|raw }}{% endif %} },
+      { "@type": "WebSite", "name": {{ store.name|json_encode|raw }}, "url": {{ (url.home|default(url.current))|json_encode|raw }},
+        "potentialAction": { "@type": "SearchAction", "target": "{{ url.home|default('/') }}?s={search_term_string}", "query-input": "required name=search_term_string" } }
     ]
   }
   </script>
 
-  {# Salla injects compiled theme assets (CSS/JS) and platform head here. #}
   {% hook 'head' %}
   {% block head %}{% endblock %}
 </head>
 
-<body class="min-h-dvh bg-bg text-content font-sans antialiased">
+<body class="min-h-dvh bg-bg font-sans text-content antialiased" dir="{{ dir }}">
   {% hook 'body:start' %}
 
-  {# Icon sprite (defines <use href="#icon-…"> symbols) — included once. #}
-  {% include 'components/ui/icon-sprite.twig' %}
+  {% include 'components.icon-sprite' %}
 
   <a href="#main" class="rkn-skip-link">{{ trans('common.skip_to_content')|default('تخطٍّ إلى المحتوى') }}</a>
 
-  {# --- Header (top-bar, mega-menu, search, cart entry points) ---------- #}
-  <header class="rkn-site-header" role="banner">
-    {% block header %}
-      {% include 'components/header/header.twig' with { menu: menu|default([]) } %}
-    {% endblock %}
-  </header>
-
-  {% block before_content %}{% endblock %}
+  {% include 'components.header' %}
 
   <main id="main" role="main" tabindex="-1">
     {% block content %}{% endblock %}
   </main>
 
-  {% block after_content %}{% endblock %}
-
-  {# --- Footer (links, newsletter, trust marks, bottom-nav, cart drawer) - #}
-  <footer class="rkn-site-footer" role="contentinfo">
-    {% block footer %}
-      {% include 'components/footer/footer.twig' with {
-        columns: footer_columns|default([]),
-        social: social_links|default([])
-      } %}
-    {% endblock %}
-  </footer>
+  {% include 'components.footer' %}
 
   {% hook 'body:end' %}
   {% block scripts %}{% endblock %}
