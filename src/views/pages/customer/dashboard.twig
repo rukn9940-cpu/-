@@ -1,79 +1,47 @@
-{#
-  pages/customer/dashboard.twig — Customer dashboard
-  @summary  Account sidebar + welcome, quick stats, and recent orders.
-  @data     customer, orders (recent), stats
-#}
-{% extends 'layouts/master.twig' %}
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('account.my_account')|default('حسابي') }} — {{ store.name }}{% endblock %}
 
 {% block content %}
 <div class="rkn-container py-8">
-  <h1 class="mb-6 text-2xl font-extrabold text-content md:text-3xl">{{ trans('account.my_account') }}</h1>
-
+  <h1 class="mb-6 text-2xl font-extrabold text-content md:text-3xl">{{ trans('account.my_account')|default('حسابي') }}</h1>
   <div class="grid gap-6 lg:grid-cols-[260px_1fr]">
-    {% include 'components/account/sidebar.twig' with { active: 'dashboard' } only %}
-
+    {% include 'components.account-sidebar' with { active: 'dashboard' } %}
     <div class="space-y-6">
-      {# Welcome #}
       <div class="rkn-card p-5">
         <p class="text-sm text-content-muted">{{ trans('account.welcome')|default('مرحبًا') }}،</p>
-        <p class="text-xl font-bold text-content">{{ customer.name|default(trans('account.customer')|default('عميلنا العزيز')) }}</p>
+        <p class="text-xl font-bold text-content">{{ user.name|default(customer.name|default(trans('account.customer')|default('عميلنا العزيز'))) }}</p>
       </div>
-
-      {# Stats #}
       <div class="grid gap-4 sm:grid-cols-3">
-        {% set stats = [
+        {% set cards = [
           { label: trans('account.total_orders')|default('إجمالي الطلبات'), value: stats.orders|default(0), icon: 'cart' },
-          { label: trans('account.wishlist'), value: stats.wishlist|default(0), icon: 'star' },
+          { label: trans('account.wishlist')|default('المفضلة'), value: stats.wishlist|default(0), icon: 'star' },
           { label: trans('account.wallet')|default('المحفظة'), value: (stats.wallet|default(0))|money, icon: 'box' }
         ] %}
-        {% for s in stats %}
+        {% for s in cards %}
           <div class="rkn-card flex items-center gap-4 p-5">
-            <span class="grid size-12 place-items-center rounded-xl bg-primary-50 text-primary-600">
-              <svg class="size-6" aria-hidden="true"><use href="#icon-{{ s.icon }}"></use></svg>
-            </span>
-            <div>
-              <p class="text-xl font-extrabold text-content">{{ s.value }}</p>
-              <p class="text-xs text-content-muted">{{ s.label }}</p>
-            </div>
+            <span class="grid size-12 place-items-center rounded-xl bg-primary-50 text-primary-600"><svg class="size-6" aria-hidden="true"><use href="#icon-{{ s.icon }}"></use></svg></span>
+            <div><p class="text-xl font-extrabold text-content">{{ s.value }}</p><p class="text-xs text-content-muted">{{ s.label }}</p></div>
           </div>
         {% endfor %}
       </div>
-
-      {# Recent orders #}
       <div class="rkn-card overflow-hidden">
         <div class="flex items-center justify-between border-b border-border p-4">
           <h2 class="text-base font-bold">{{ trans('account.recent_orders')|default('أحدث الطلبات') }}</h2>
-          <a href="/orders" class="text-sm text-primary-700 hover:underline">{{ trans('common.view_all') }}</a>
+          <a href="{{ url.get('orders')|default('/orders') }}" class="text-sm text-primary-700 hover:underline">{{ trans('common.view_all')|default('عرض الكل') }}</a>
         </div>
         {% set orders = orders|default([]) %}
         {% if orders is not empty %}
-          <div class="overflow-x-auto">
-            <table class="rkn-table">
-              <thead>
-                <tr>
-                  <th>{{ trans('account.order_no')|default('رقم الطلب') }}</th>
-                  <th>{{ trans('account.date')|default('التاريخ') }}</th>
-                  <th>{{ trans('account.status')|default('الحالة') }}</th>
-                  <th>{{ trans('account.total')|default('الإجمالي') }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for order in orders %}
-                  <tr>
-                    <td class="font-semibold"><a href="{{ order.url|default('#') }}" class="text-primary-700 hover:underline">#{{ order.id }}</a></td>
-                    <td>{{ order.date }}</td>
-                    <td><span class="rkn-badge rkn-badge--primary">{{ order.status }}</span></td>
-                    <td class="font-semibold">{{ order.total|money }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+          <div class="overflow-x-auto"><table class="rkn-table">
+            <thead><tr><th>{{ trans('account.order_no')|default('رقم الطلب') }}</th><th>{{ trans('account.date')|default('التاريخ') }}</th><th>{{ trans('account.status')|default('الحالة') }}</th><th>{{ trans('account.total')|default('الإجمالي') }}</th></tr></thead>
+            <tbody>
+              {% for order in orders %}
+                <tr><td class="font-semibold"><a href="{{ order.url|default('#') }}" class="text-primary-700 hover:underline">#{{ order.id }}</a></td><td>{{ order.date }}</td><td><span class="rkn-badge rkn-badge--primary">{{ order.status }}</span></td><td class="font-semibold">{{ order.total|money }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table></div>
         {% else %}
-          {% include 'components/ui/empty-state.twig' with {
-            icon: 'cart', title: trans('account.no_orders')|default('لا توجد طلبات بعد'),
-            ctaLabel: trans('common.start_shopping')|default('ابدأ التسوق'), ctaHref: '/'
-          } only %}
+          {% include 'components.empty-state' with { icon: 'cart', title: trans('account.no_orders')|default('لا توجد طلبات بعد'), ctaLabel: trans('common.start_shopping')|default('ابدأ التسوق'), ctaHref: '/' } %}
         {% endif %}
       </div>
     </div>

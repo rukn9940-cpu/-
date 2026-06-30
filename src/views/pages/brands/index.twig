@@ -1,0 +1,19 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('nav.brands')|default('العلامات التجارية') }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+{% include 'components.breadcrumb' with { items: [{ name: trans('nav.brands')|default('العلامات التجارية'), url: '/brands' }] } %}
+
+<div class="rkn-container py-8">
+  <h1 class="mb-6 text-2xl font-extrabold text-content md:text-3xl">{{ trans('nav.brands')|default('العلامات التجارية') }}</h1>
+  {% set brands = brands|default([]) %}
+  {% if brands is not empty %}
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+      {% for brand in brands %}{% include 'components.brand-card' with { brand: brand } %}{% endfor %}
+    </div>
+  {% else %}
+    {% include 'components.empty-state' with { icon: 'box', title: trans('brands.empty')|default('لا توجد علامات تجارية'), ctaLabel: trans('common.view_all')|default('تصفّح المنتجات'), ctaHref: '/products' } %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('account.addresses')|default('العناوين') }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+<div class="rkn-container py-8">
+  <h1 class="mb-6 text-2xl font-extrabold text-content md:text-3xl">{{ trans('account.addresses')|default('العناوين') }}</h1>
+  <div class="grid gap-6 lg:grid-cols-[260px_1fr]">
+    {% include 'components.account-sidebar' with { active: 'addresses' } %}
+    <div class="rkn-card p-5 md:p-7">
+      <salla-addresses></salla-addresses>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% set items = items|default([]) %}
+{% if items is not empty %}
+<nav class="rkn-container py-3" aria-label="{{ trans('common.breadcrumb')|default('مسار التنقل') }}">
+  <ol class="flex flex-wrap items-center gap-1.5 text-sm text-content-muted">
+    <li><a href="{{ url.home|default('/') }}" class="hover:text-primary-700">{{ trans('nav.home')|default('الرئيسية') }}</a></li>
+    {% for item in items %}
+      <li aria-hidden="true" class="text-content-subtle"><svg class="size-4 rkn-flip-rtl" viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 4L6.1 5.4 10.7 10l-4.6 4.6L7.5 16l6-6z"/></svg></li>
+      <li>
+        {% if loop.last %}<span class="font-semibold text-content" aria-current="page">{{ item.name }}</span>
+        {% else %}<a href="{{ item.url }}" class="hover:text-primary-700">{{ item.name }}</a>{% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</nav>
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": {{ (trans('nav.home')|default('الرئيسية'))|json_encode|raw }}, "item": {{ (url.home|default('/'))|json_encode|raw }} }{% for item in items %},
+  { "@type": "ListItem", "position": {{ loop.index + 1 }}, "name": {{ item.name|json_encode|raw }}{% if item.url %}, "item": {{ item.url|json_encode|raw }}{% endif %} }{% endfor %}
+] }
+</script>
+{% endif %}

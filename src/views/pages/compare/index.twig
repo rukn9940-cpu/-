@@ -1,78 +1,35 @@
-{#
-  pages/compare/index.twig — Product comparison
-  @summary  Side-by-side comparison table (image, price, rating, key specs,
-            add-to-cart) for products in the compare list. Empty state otherwise.
-  @data     products (array, resolved from the persisted compare ids)
-  @a11y     real <table> with scope; horizontally scrollable on mobile
-#}
-{% extends 'layouts/master.twig' %}
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('product.compare')|default('المقارنة') }} — {{ store.name }}{% endblock %}
 
 {% block content %}
 <div class="rkn-container py-8" x-data>
   <div class="mb-6 flex items-center justify-between">
-    <h1 class="text-2xl font-extrabold text-content md:text-3xl">{{ trans('product.compare') }}</h1>
-    <button x-show="$store.compare.count > 0" class="rkn-btn rkn-btn--ghost rkn-btn--sm text-danger-600" @click="$store.compare.clear()">
-      {{ trans('compare.clear_all')|default('مسح الكل') }}
-    </button>
+    <h1 class="text-2xl font-extrabold text-content md:text-3xl">{{ trans('product.compare')|default('المقارنة') }}</h1>
+    <button x-show="$store.compare.count > 0" class="rkn-btn rkn-btn--ghost rkn-btn--sm text-danger-600" @click="$store.compare.clear()">{{ trans('compare.clear_all')|default('مسح الكل') }}</button>
   </div>
 
   {% set products = products|default([]) %}
   {% if products is not empty %}
     <div class="overflow-x-auto rounded-xl border border-border">
       <table class="rkn-table min-w-[640px]">
-        <thead>
-          <tr>
-            <th class="w-40">{{ trans('compare.product')|default('المنتج') }}</th>
-            {% for product in products %}
-              <th class="min-w-48 text-center">
-                <a href="{{ product.url }}" class="block">
-                  <img src="{{ product.image.url|default(product.image) }}" alt="{{ product.name }}" class="mx-auto mb-2 size-28 rounded-lg object-cover" loading="lazy">
-                  <span class="block text-sm font-semibold text-content hover:text-primary-700">{{ product.name }}</span>
-                </a>
-              </th>
-            {% endfor %}
-          </tr>
-        </thead>
+        <thead><tr>
+          <th class="w-40">{{ trans('compare.product')|default('المنتج') }}</th>
+          {% for product in products %}
+            <th class="min-w-48 text-center"><a href="{{ product.url }}" class="block"><img src="{{ product.image.url|default(product.image) }}" alt="{{ product.name }}" class="mx-auto mb-2 size-28 rounded-lg object-cover" loading="lazy"><span class="block text-sm font-semibold text-content hover:text-primary-700">{{ product.name }}</span></a></th>
+          {% endfor %}
+        </tr></thead>
         <tbody>
-          <tr>
-            <th scope="row">{{ trans('compare.price')|default('السعر') }}</th>
-            {% for product in products %}<td class="text-center font-bold text-primary-700">{{ (product.sale_price|default(product.price))|money }}</td>{% endfor %}
-          </tr>
-          <tr>
-            <th scope="row">{{ trans('product.reviews') }}</th>
-            {% for product in products %}<td class="text-center">{% include 'components/ui/rating-stars.twig' with { value: product.rating.stars|default(product.rating)|default(0) } only %}</td>{% endfor %}
-          </tr>
-          <tr>
-            <th scope="row">{{ trans('product.brand') }}</th>
-            {% for product in products %}<td class="text-center">{{ product.brand.name|default('—') }}</td>{% endfor %}
-          </tr>
-          <tr>
-            <th scope="row">{{ trans('product.in_stock') }}</th>
-            {% for product in products %}
-              <td class="text-center">
-                {% if product.is_out_of_stock|default(false) %}<span class="text-danger-600">{{ trans('product.out_of_stock') }}</span>
-                {% else %}<span class="text-success-600">{{ trans('product.in_stock') }}</span>{% endif %}
-              </td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <th scope="row"></th>
-            {% for product in products %}
-              <td class="text-center">
-                <salla-add-product-button product-id="{{ product.id }}" class="rkn-btn rkn-btn--primary rkn-btn--sm">{{ trans('cart.add_to_cart') }}</salla-add-product-button>
-              </td>
-            {% endfor %}
-          </tr>
+          <tr><th scope="row">{{ trans('compare.price')|default('السعر') }}</th>{% for product in products %}<td class="text-center font-bold text-primary-700">{{ (product.sale_price|default(product.price))|money }}</td>{% endfor %}</tr>
+          <tr><th scope="row">{{ trans('product.reviews')|default('التقييم') }}</th>{% for product in products %}<td class="text-center">{% include 'components.rating-stars' with { value: product.rating.stars|default(product.rating)|default(0) } %}</td>{% endfor %}</tr>
+          <tr><th scope="row">{{ trans('product.brand')|default('العلامة') }}</th>{% for product in products %}<td class="text-center">{{ product.brand.name|default('—') }}</td>{% endfor %}</tr>
+          <tr><th scope="row">{{ trans('product.in_stock')|default('التوفر') }}</th>{% for product in products %}<td class="text-center">{% if product.is_out_of_stock|default(false) %}<span class="text-danger-600">{{ trans('product.out_of_stock')|default('غير متوفر') }}</span>{% else %}<span class="text-success-600">{{ trans('product.in_stock')|default('متوفر') }}</span>{% endif %}</td>{% endfor %}</tr>
+          <tr><th scope="row"></th>{% for product in products %}<td class="text-center"><salla-add-product-button product-id="{{ product.id }}" class="rkn-btn rkn-btn--primary rkn-btn--sm">{{ trans('cart.add_to_cart')|default('أضف للسلة') }}</salla-add-product-button></td>{% endfor %}</tr>
         </tbody>
       </table>
     </div>
   {% else %}
-    {% include 'components/ui/empty-state.twig' with {
-      icon: 'box',
-      title: trans('compare.empty_title')|default('لا توجد منتجات للمقارنة'),
-      message: trans('compare.empty_message')|default('أضف منتجات إلى المقارنة من خلال أيقونة المقارنة في بطاقة المنتج.'),
-      ctaLabel: trans('common.view_all'), ctaHref: '/products'
-    } only %}
+    {% include 'components.empty-state' with { icon: 'box', title: trans('compare.empty_title')|default('لا توجد منتجات للمقارنة'), message: trans('compare.empty_message')|default('أضف منتجات إلى المقارنة من خلال أيقونة المقارنة في بطاقة المنتج.'), ctaLabel: trans('common.view_all')|default('تصفّح المنتجات'), ctaHref: '/products' } %}
   {% endif %}
 </div>
 {% endblock %}

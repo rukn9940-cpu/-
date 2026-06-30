@@ -1,0 +1,36 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ article.title }} — {{ store.name }}{% endblock %}
+
+{% block seo %}
+  <meta name="description" content="{{ (article.excerpt|default(article.content))|striptags|slice(0, 160) }}">
+  <link rel="canonical" href="{{ article.url|default(url.current) }}">
+  <meta property="og:type" content="article">
+  {% if article.image %}<meta property="og:image" content="{{ article.image }}">{% endif %}
+{% endblock %}
+
+{% block content %}
+{% include 'components.breadcrumb' with { items: [
+  { name: trans('nav.blog')|default('المدونة'), url: '/blog' },
+  { name: article.title, url: article.url }
+] } %}
+
+<article class="rkn-container py-8">
+  <div class="mx-auto max-w-3xl">
+    <header class="mb-6">
+      {% if article.category %}<span class="rkn-badge rkn-badge--primary">{{ article.category }}</span>{% endif %}
+      <h1 class="mt-3 text-3xl font-extrabold leading-tight text-content md:text-4xl">{{ article.title }}</h1>
+      <div class="mt-3 flex items-center gap-3 text-sm text-content-subtle">
+        {% if article.date %}<span>{{ article.date }}</span>{% endif %}
+        {% if article.author %}<span>· {{ article.author }}</span>{% endif %}
+      </div>
+    </header>
+    {% if article.image %}<img src="{{ article.image }}" alt="{{ article.title }}" class="mb-8 w-full rounded-2xl object-cover" loading="eager" fetchpriority="high">{% endif %}
+    <div class="prose prose-lg max-w-none text-content-muted">{{ article.content|raw }}</div>
+  </div>
+</article>
+
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "Article", "headline": {{ article.title|json_encode|raw }}{% if article.image %}, "image": {{ article.image|json_encode|raw }}{% endif %}{% if article.date %}, "datePublished": {{ article.date|json_encode|raw }}{% endif %}, "author": { "@type": "Organization", "name": {{ store.name|json_encode|raw }} }, "publisher": { "@type": "Organization", "name": {{ store.name|json_encode|raw }} } }
+</script>
+{% endblock %}

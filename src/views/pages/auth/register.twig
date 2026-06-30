@@ -1,0 +1,21 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('account.register')|default('إنشاء حساب') }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+<div class="rkn-container py-12">
+  <div class="mx-auto max-w-md">
+    <div class="mb-6 text-center">
+      <h1 class="text-2xl font-extrabold text-content">{{ trans('account.register')|default('إنشاء حساب') }}</h1>
+      <p class="mt-1 text-sm text-content-muted">{{ trans('auth.register_subtitle')|default('أنشئ حسابك للاستفادة من تجربة تسوق أسرع.') }}</p>
+    </div>
+    <div class="rkn-card p-6 md:p-8">
+      <salla-register></salla-register>
+    </div>
+    <p class="mt-4 text-center text-sm text-content-muted">
+      {{ trans('auth.have_account')|default('لديك حساب بالفعل؟') }}
+      <a href="{{ url.get('auth.login')|default('/login') }}" class="font-semibold text-primary-700 hover:underline">{{ trans('account.login')|default('تسجيل الدخول') }}</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

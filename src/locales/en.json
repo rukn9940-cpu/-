@@ -9,6 +9,14 @@
     "view_all": "View all",
     "currency": "SAR",
     "added": "Added",
+    "clear": "Clear",
+    "previous": "Previous",
+    "next": "Next",
+    "pagination": "Pagination",
+    "breadcrumb": "Breadcrumb",
+    "start_shopping": "Start shopping",
+    "back_home": "Back home",
+    "announcement": "Announcement",
     "error_generic": "Something went wrong, please try again."
   },
   "nav": {
@@ -20,23 +28,52 @@
     "installation": "Installation Services",
     "support": "Support",
     "blog": "Blog",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "About",
+    "primary": "Primary navigation",
+    "bottom": "Bottom navigation"
   },
   "account": {
     "login": "Sign in",
     "register": "Create account",
     "my_account": "My account",
+    "dashboard": "Dashboard",
     "orders": "Orders",
     "wishlist": "Wishlist",
-    "logout": "Sign out"
+    "addresses": "Addresses",
+    "settings": "Settings",
+    "logout": "Sign out",
+    "welcome": "Welcome",
+    "customer": "Valued customer",
+    "total_orders": "Total orders",
+    "wallet": "Wallet",
+    "recent_orders": "Recent orders",
+    "order_no": "Order #",
+    "date": "Date",
+    "status": "Status",
+    "total": "Total",
+    "view_order": "View",
+    "no_orders": "No orders yet"
   },
   "cart": {
     "title": "Cart",
     "add_to_cart": "Add to cart",
     "empty": "Your cart is empty",
+    "empty_message": "You haven't added any products yet.",
     "subtotal": "Subtotal",
+    "order_summary": "Order summary",
     "checkout": "Checkout",
+    "continue_shopping": "Continue shopping",
+    "coupon": "Coupon code",
+    "apply": "Apply",
+    "you_may_like": "You may also like",
     "remove": "Remove"
+  },
+  "checkout": {
+    "secure": "Secure encrypted checkout",
+    "step_info": "Information",
+    "step_shipping": "Shipping",
+    "step_payment": "Payment"
   },
   "product": {
     "add_to_wishlist": "Add to wishlist",
@@ -45,22 +82,175 @@
     "out_of_stock": "Out of stock",
     "sku": "SKU",
     "brand": "Brand",
+    "description": "Description",
     "specifications": "Specifications",
+    "no_description": "No description.",
+    "no_specs": "No specifications.",
+    "details": "Product details",
     "reviews": "Reviews",
     "related": "Related products",
+    "recently_viewed": "Recently viewed",
+    "gallery": "Product images",
+    "image": "Image",
+    "quantity": "Quantity",
+    "increase": "Increase",
+    "decrease": "Decrease",
+    "out_of_5": "out of 5",
+    "new": "New",
     "off": "OFF"
+  },
+  "category": {
+    "filters": "Filters",
+    "sort": "Sort by",
+    "reset": "Reset",
+    "apply": "Apply",
+    "price": "Price",
+    "min": "Min",
+    "max": "Max",
+    "and_up": "& up",
+    "results": "results",
+    "products": "products",
+    "empty_title": "No products",
+    "empty_message": "We couldn't find products in this category right now."
+  },
+  "sort": {
+    "latest": "Latest",
+    "best_selling": "Best selling",
+    "price_low": "Price: low to high",
+    "price_high": "Price: high to low",
+    "top_rated": "Top rated"
+  },
+  "search": {
+    "placeholder": "Search cameras, systems, networking…",
+    "recent": "Recent searches",
+    "no_results": "No results",
+    "view_all_results": "View all results",
+    "results_for": "Search results for",
+    "no_results_title": "No results",
+    "no_results_message": "Try different keywords or browse the categories."
+  },
+  "home": {
+    "hero": "Featured offers",
+    "shop_by_category": "Shop by category",
+    "featured_categories": "Featured categories",
+    "flash_deals": "Flash deals",
+    "best_sellers": "Best sellers",
+    "business_title": "Security solutions for business & projects",
+    "business_sub": "Design, supply and installation of surveillance systems for companies with full maintenance contracts.",
+    "request_quote": "Request a quote",
+    "install_title": "Certified professional installation",
+    "install_sub": "Certified technicians, installation warranty, and flexible appointments across the Kingdom.",
+    "book_installation": "Book installation",
+    "why_choose": "Why RKN?",
+    "why_choose_sub": "Your trusted partner for security & surveillance solutions in Saudi Arabia.",
+    "our_brands": "Our brands",
+    "reviews": "Customer reviews",
+    "blog": "Educational blog",
+    "faq": "FAQ",
+    "all_faqs": "View all FAQs",
+    "stat_installs": "installations",
+    "stat_support": "support",
+    "stat_years": "years experience"
   },
   "trust": {
     "warranty": "Certified warranty",
-    "authentic": "Genuine product",
+    "warranty_text": "Official warranty on all products",
+    "authentic": "Genuine products",
+    "authentic_text": "100% genuine products",
     "secure_checkout": "Secure checkout",
+    "secure_text": "Secure encrypted payment",
     "installation_available": "Professional installation",
-    "support_hours": "Technical support"
+    "installation_text": "Certified installation with warranty"
+  },
+  "reviews": {
+    "anonymous": "Customer",
+    "verified": "Verified purchase",
+    "empty_title": "No reviews yet",
+    "empty_message": "Be the first to review this product."
+  },
+  "blog": {
+    "title": "Educational blog",
+    "subtitle": "Articles and tips about security & surveillance systems.",
+    "read_more": "Read more",
+    "min_read": "min read",
+    "empty": "No articles yet"
+  },
+  "brands": { "empty": "No brands" },
+  "compare": {
+    "product": "Product",
+    "price": "Price",
+    "clear_all": "Clear all",
+    "empty_title": "No products to compare",
+    "empty_message": "Add products to compare using the compare icon on the product card."
+  },
+  "wishlist": {
+    "empty_title": "Your wishlist is empty",
+    "empty_message": "Add products you love to keep track of them."
+  },
+  "contact": {
+    "title": "Contact us",
+    "subtitle": "Our team is ready to help you choose the right security solution.",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "message": "Your message",
+    "send": "Send",
+    "sent": "Your message has been sent!"
+  },
+  "business": {
+    "title": "Integrated security solutions for business",
+    "subtitle": "From consultation and design to supply, installation and maintenance — one partner for all your security needs.",
+    "services": "Our business services",
+    "process": "How we work",
+    "quote_title": "Request a quote",
+    "quote_sub": "Tell us about your project and our team will contact you within 24 hours.",
+    "quote_sent": "We received your request, we'll contact you soon.",
+    "company": "Company name",
+    "city": "City",
+    "details": "Project details"
+  },
+  "install": {
+    "title": "Book professional installation",
+    "subtitle": "Certified technicians, installation warranty, and flexible appointments across the Kingdom.",
+    "service_type": "Service type",
+    "choose": "Choose…",
+    "cameras": "CCTV camera installation",
+    "access": "Access control systems",
+    "network": "Networking & infrastructure",
+    "maintenance": "Maintain existing system",
+    "preferred_date": "Preferred date",
+    "units": "Approx. number of units",
+    "how": "How it works",
+    "book": "Book now",
+    "booked": "Your booking request was received, we'll confirm the appointment soon."
+  },
+  "warranty": {
+    "title": "Warranty & returns",
+    "subtitle": "We stand behind our products with an official warranty and after-sales service.",
+    "official": "Official warranty",
+    "authentic": "Genuine products",
+    "support": "After-sales support",
+    "terms": "Warranty terms"
+  },
+  "faq": {
+    "subtitle": "Answers to the most common questions about our products and services."
+  },
+  "auth": {
+    "login_subtitle": "Sign in to track your orders and wishlist.",
+    "register_subtitle": "Create your account for a faster shopping experience.",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?"
+  },
+  "error": {
+    "not_found": "Page not found",
+    "not_found_message": "Sorry, we couldn't find the page you're looking for."
   },
   "footer": {
     "newsletter_title": "Subscribe to our newsletter",
+    "newsletter_subtitle": "Latest offers and products in your inbox.",
     "newsletter_placeholder": "Your email",
     "subscribe": "Subscribe",
+    "subscribed": "Subscribed successfully!",
     "rights": "All rights reserved"
   }
 }

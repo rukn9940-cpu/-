@@ -1,0 +1,33 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('account.orders')|default('طلباتي') }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+<div class="rkn-container py-8">
+  <h1 class="mb-6 text-2xl font-extrabold text-content md:text-3xl">{{ trans('account.orders')|default('طلباتي') }}</h1>
+  <div class="grid gap-6 lg:grid-cols-[260px_1fr]">
+    {% include 'components.account-sidebar' with { active: 'orders' } %}
+    <div>
+      {% set orders = orders|default([]) %}
+      {% if orders is not empty %}
+        <div class="rkn-card overflow-x-auto"><table class="rkn-table">
+          <thead><tr><th>{{ trans('account.order_no')|default('رقم الطلب') }}</th><th>{{ trans('account.date')|default('التاريخ') }}</th><th>{{ trans('account.status')|default('الحالة') }}</th><th>{{ trans('account.total')|default('الإجمالي') }}</th><th></th></tr></thead>
+          <tbody>
+            {% for order in orders %}
+              <tr>
+                <td class="font-semibold">#{{ order.id }}</td>
+                <td>{{ order.date }}</td>
+                <td><span class="rkn-badge rkn-badge--primary">{{ order.status }}</span></td>
+                <td class="font-semibold">{{ order.total|money }}</td>
+                <td><a href="{{ order.url|default('#') }}" class="rkn-btn rkn-btn--outline rkn-btn--sm">{{ trans('account.view_order')|default('عرض') }}</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table></div>
+      {% else %}
+        {% include 'components.empty-state' with { icon: 'cart', title: trans('account.no_orders')|default('لا توجد طلبات بعد'), ctaLabel: trans('common.start_shopping')|default('ابدأ التسوق'), ctaHref: '/' } %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

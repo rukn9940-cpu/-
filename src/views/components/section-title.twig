@@ -1,0 +1,13 @@
+{# Reusable section heading with optional "view all" link. #}
+<div class="mb-6 flex items-end justify-between gap-4">
+  <div class="flex items-center gap-3">
+    {% if icon %}<span class="grid size-11 place-items-center rounded-xl bg-primary-50 text-primary-600"><svg class="size-6" aria-hidden="true"><use href="#icon-{{ icon }}"></use></svg></span>{% endif %}
+    <div>
+      <h2 class="text-xl font-extrabold text-content md:text-2xl">{{ title }}</h2>
+      {% if subtitle %}<p class="mt-0.5 text-sm text-content-muted">{{ subtitle }}</p>{% endif %}
+    </div>
+  </div>
+  {% if viewAllUrl %}
+    <a href="{{ viewAllUrl }}" class="rkn-btn rkn-btn--ghost rkn-btn--sm whitespace-nowrap">{{ trans('common.view_all')|default('عرض الكل') }}<svg class="size-4 rkn-flip-rtl" viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 4L6.1 5.4 10.7 10l-4.6 4.6L7.5 16l6-6z"/></svg></a>
+  {% endif %}
+</div>

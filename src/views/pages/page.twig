@@ -1,0 +1,18 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ page.title }} — {{ store.name }}{% endblock %}
+
+{% block seo %}
+  <meta name="description" content="{{ (page.description|default(page.content))|striptags|slice(0, 160) }}">
+  <link rel="canonical" href="{{ page.url|default(url.current) }}">
+{% endblock %}
+
+{% block content %}
+{% include 'components.breadcrumb' with { items: [{ name: page.title, url: page.url|default('#') }] } %}
+<div class="rkn-container py-8">
+  <article class="mx-auto max-w-3xl">
+    <h1 class="mb-6 text-2xl font-extrabold text-content md:text-3xl">{{ page.title }}</h1>
+    <div class="prose prose-lg max-w-none text-content-muted">{{ page.content|raw }}</div>
+  </article>
+</div>
+{% endblock %}

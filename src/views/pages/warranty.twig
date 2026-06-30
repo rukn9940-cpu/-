@@ -1,11 +1,9 @@
-{#
-  pages/warranty.twig — Warranty & returns
-  @summary  Warranty coverage cards, terms, and a warranty FAQ.
-#}
-{% extends 'layouts/master.twig' %}
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('trust.warranty')|default('الضمان') }} — {{ store.name }}{% endblock %}
 
 {% block content %}
-{% include 'components/common/breadcrumb.twig' with { items: [{ name: trans('trust.warranty'), url: '/warranty' }] } only %}
+{% include 'components.breadcrumb' with { items: [{ name: trans('trust.warranty')|default('الضمان'), url: '/warranty' }] } %}
 
 <div class="rkn-container py-8">
   <header class="mb-8 max-w-2xl">
@@ -13,7 +11,6 @@
     <p class="mt-2 text-content-muted">{{ trans('warranty.subtitle')|default('نلتزم بجودة منتجاتنا وندعمها بضمان رسمي وخدمة ما بعد البيع.') }}</p>
   </header>
 
-  {# Coverage cards #}
   <div class="grid gap-4 md:grid-cols-3">
     {% set cards = [
       { icon: 'shield', t: trans('warranty.official')|default('ضمان رسمي'), d: trans('warranty.official_d')|default('ضمان معتمد من الوكيل على جميع المنتجات.') },
@@ -21,29 +18,22 @@
       { icon: 'tool', t: trans('warranty.support')|default('دعم ما بعد البيع'), d: trans('warranty.support_d')|default('فريق دعم فني وصيانة على مدار الأسبوع.') }
     ] %}
     {% for c in cards %}
-      <div class="rkn-card p-6">
-        <span class="mb-4 inline-grid size-12 place-items-center rounded-xl bg-primary-50 text-primary-600">
-          <svg class="size-6" aria-hidden="true"><use href="#icon-{{ c.icon }}"></use></svg>
-        </span>
-        <h3 class="text-base font-bold text-content">{{ c.t }}</h3>
-        <p class="mt-2 text-sm text-content-muted">{{ c.d }}</p>
-      </div>
+      <div class="rkn-card p-6"><span class="mb-4 inline-grid size-12 place-items-center rounded-xl bg-primary-50 text-primary-600"><svg class="size-6" aria-hidden="true"><use href="#icon-{{ c.icon }}"></use></svg></span><h3 class="text-base font-bold text-content">{{ c.t }}</h3><p class="mt-2 text-sm text-content-muted">{{ c.d }}</p></div>
     {% endfor %}
   </div>
 
-  {# Terms + FAQ #}
   <div class="mt-12 grid gap-8 lg:grid-cols-2">
     <div class="prose prose-sm max-w-none text-content-muted">
       <h2 class="text-lg font-bold text-content">{{ trans('warranty.terms')|default('شروط الضمان') }}</h2>
       {{ page.content|raw|default('<ul><li>يسري الضمان من تاريخ الشراء حسب فترة كل منتج.</li><li>لا يشمل الضمان سوء الاستخدام أو الأضرار الناتجة عن التركيب غير المعتمد.</li><li>يجب الاحتفاظ بالفاتورة الأصلية لتفعيل الضمان.</li></ul>') }}
     </div>
     <div>
-      {% set faqs = warranty_faqs|default([
+      {% set faqs = [
         { q: 'كيف أفعّل الضمان؟', a: 'احتفظ بفاتورة الشراء وتواصل مع خدمة العملاء عند الحاجة.' },
         { q: 'هل يشمل الضمان التركيب؟', a: 'نعم، التركيب عبر فريقنا المعتمد مشمول بضمان منفصل على العمل.' },
         { q: 'ما سياسة الاستبدال؟', a: 'يمكن الاستبدال خلال الفترة المحددة وفق سياسة المتجر وبشرط سلامة المنتج.' }
-      ]) %}
-      {% include 'components/common/faq.twig' with { items: faqs, title: trans('home.faq')|default('الأسئلة الشائعة') } only %}
+      ] %}
+      {% include 'components.faq' with { items: faqs, title: trans('home.faq')|default('الأسئلة الشائعة') } %}
     </div>
   </div>
 </div>

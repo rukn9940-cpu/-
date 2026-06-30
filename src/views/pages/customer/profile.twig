@@ -1,0 +1,16 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('account.settings')|default('الإعدادات') }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+<div class="rkn-container py-8">
+  <h1 class="mb-6 text-2xl font-extrabold text-content md:text-3xl">{{ trans('account.settings')|default('الإعدادات') }}</h1>
+  <div class="grid gap-6 lg:grid-cols-[260px_1fr]">
+    {% include 'components.account-sidebar' with { active: 'settings' } %}
+    <div class="rkn-card p-5 md:p-7">
+      {# Salla renders the profile edit form; styled by our tokens. #}
+      <salla-profile></salla-profile>
+    </div>
+  </div>
+</div>
+{% endblock %}

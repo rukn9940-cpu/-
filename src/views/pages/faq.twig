@@ -1,0 +1,24 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('home.faq')|default('الأسئلة الشائعة') }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+{% include 'components.breadcrumb' with { items: [{ name: trans('home.faq')|default('الأسئلة الشائعة'), url: '/faq' }] } %}
+
+<div class="rkn-container py-8">
+  <header class="mb-8 max-w-2xl">
+    <h1 class="text-2xl font-extrabold text-content md:text-3xl">{{ trans('home.faq')|default('الأسئلة الشائعة') }}</h1>
+    <p class="mt-2 text-content-muted">{{ trans('faq.subtitle')|default('إجابات على أكثر الأسئلة شيوعًا حول منتجاتنا وخدماتنا.') }}</p>
+  </header>
+
+  {% set faqs = faqs|default([
+    { q: 'هل توفرون خدمة التركيب؟', a: 'نعم، نوفر خدمة تركيب احترافية معتمدة في جميع مناطق المملكة مع ضمان على التركيب.' },
+    { q: 'ما مدة الضمان على المنتجات؟', a: 'جميع منتجاتنا أصلية وتأتي بضمان رسمي يختلف حسب المنتج والعلامة التجارية.' },
+    { q: 'هل الكاميرات الشمسية تعمل ليلًا؟', a: 'نعم، تعمل على مدار الساعة بتقنية الرؤية الليلية وبطارية مدمجة تشحن نهارًا.' },
+    { q: 'هل أستطيع المراقبة عبر الجوال؟', a: 'بالتأكيد، جميع الأنظمة تدعم المراقبة المباشرة عبر تطبيقات الجوال.' },
+    { q: 'كم تستغرق عملية التوصيل؟', a: 'يتم التوصيل عادة خلال 2-5 أيام عمل حسب المدينة وتوفر المنتج.' },
+    { q: 'هل يمكن إرجاع أو استبدال المنتج؟', a: 'نعم، وفق سياسة الإرجاع والاستبدال المعتمدة وبشرط سلامة المنتج وتغليفه.' }
+  ]) %}
+  <div class="mx-auto max-w-3xl">{% include 'components.faq' with { items: faqs } %}</div>
+</div>
+{% endblock %}

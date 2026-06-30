@@ -1,0 +1,52 @@
+{% set p = product %}
+{% set on_sale = p.is_on_sale|default(false) or (p.sale_price is defined and p.sale_price) %}
+<div class="flex flex-col gap-5" x-data="rknTrackView('{{ p.id }}')">
+  {% if p.brand.name is defined %}<a href="{{ p.brand.url|default('#') }}" class="text-sm font-medium text-primary-600 hover:underline">{{ p.brand.name }}</a>{% endif %}
+
+  <h1 class="text-2xl font-extrabold leading-tight text-content md:text-3xl">{{ p.name }}</h1>
+
+  <div class="flex flex-wrap items-center gap-4">
+    {% if p.rating.stars is defined or p.rating is defined %}
+      {% include 'components.rating-stars' with { value: p.rating.stars|default(p.rating)|default(0), count: p.rating.count|default(p.reviews_count)|default(0), size: 'md' } %}
+    {% endif %}
+    <span class="text-sm text-content-subtle">{{ trans('product.sku')|default('رقم المنتج') }}: {{ p.sku|default('—') }}</span>
+  </div>
+
+  <div class="flex flex-wrap items-baseline gap-3">
+    <span class="text-3xl font-extrabold text-content">{{ (p.sale_price|default(p.price))|money }}</span>
+    {% if on_sale and p.regular_price %}
+      <span class="text-lg text-content-subtle line-through">{{ p.regular_price|money }}</span>
+      {% if p.discount_percentage|default(p.sale_percentage) %}<span class="rkn-badge rkn-badge--sale">-{{ p.discount_percentage|default(p.sale_percentage) }}%</span>{% endif %}
+    {% endif %}
+  </div>
+
+  {% if p.is_out_of_stock|default(false) %}
+    <p class="inline-flex w-fit items-center gap-2 text-sm font-semibold text-danger-600"><span class="size-2 rounded-full bg-danger-500"></span>{{ trans('product.out_of_stock')|default('غير متوفر') }}</p>
+  {% else %}
+    <p class="inline-flex w-fit items-center gap-2 text-sm font-semibold text-success-600"><span class="size-2 rounded-full bg-success-500"></span>{{ trans('product.in_stock')|default('متوفر') }}</p>
+  {% endif %}
+
+  {% if p.short_description %}<p class="text-sm leading-relaxed text-content-muted">{{ p.short_description }}</p>{% endif %}
+
+  {# Salla renders option inputs; styled by our tokens #}
+  <salla-product-options product-id="{{ p.id }}"></salla-product-options>
+
+  {% if not p.is_out_of_stock|default(false) %}
+    <div class="flex flex-wrap items-center gap-3">
+      {% include 'components.quantity' with { value: 1, max: p.max_quantity|default(99) } %}
+      <salla-add-product-button product-id="{{ p.id }}" class="rkn-btn rkn-btn--primary rkn-btn--lg flex-1">
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/></svg>
+        {{ trans('cart.add_to_cart')|default('أضف إلى السلة') }}
+      </salla-add-product-button>
+    </div>
+  {% endif %}
+
+  <div class="flex items-center gap-3">
+    <salla-wishlist product-id="{{ p.id }}" class="grid size-11 place-items-center rounded-full border border-border text-content-muted transition hover:border-danger-200 hover:text-danger-600" aria-label="{{ trans('product.add_to_wishlist')|default('أضف إلى المفضلة') }}"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.6-9.2-8.4C1 8.4 2.7 5 6 5c2 0 3.2 1.2 4 2.3C10.8 6.2 12 5 14 5c3.3 0 5 3.4 3.2 6.6C19 15.4 12 20 12 20z"/></svg></salla-wishlist>
+    {% if theme.settings.show_compare|default(true) %}
+    <button type="button" x-data class="grid size-11 place-items-center rounded-full border transition" :class="$store.compare.has('{{ p.id }}') ? 'border-primary-300 text-primary-600' : 'border-border text-content-muted hover:text-primary-600'" @click="$store.compare.toggle('{{ p.id }}')" :aria-pressed="$store.compare.has('{{ p.id }}')" aria-label="{{ trans('product.compare')|default('قارن') }}"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3v18M17 3v18M3 8h8M13 16h8"/></svg></button>
+    {% endif %}
+  </div>
+
+  {% include 'components.trust-badges' with { layout: 'inline' } %}
+</div>

@@ -1,0 +1,16 @@
+{% set a = article %}
+<article class="rkn-card rkn-card--interactive group flex flex-col overflow-hidden">
+  <a href="{{ a.url }}" class="relative block aspect-[16/10] overflow-hidden bg-surface-sunken" aria-label="{{ a.title }}">
+    {% if a.image %}<img src="{{ a.image }}" alt="{{ a.title }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">{% endif %}
+    {% if a.category %}<span class="absolute inset-block-start-3 inset-inline-start-3 rkn-badge rkn-badge--primary shadow-sm">{{ a.category }}</span>{% endif %}
+  </a>
+  <div class="flex flex-1 flex-col p-4">
+    <div class="mb-2 flex items-center gap-3 text-xs text-content-subtle">
+      {% if a.date %}<span>{{ a.date }}</span>{% endif %}
+      {% if a.read_minutes %}<span>· {{ a.read_minutes }} {{ trans('blog.min_read')|default('دقيقة قراءة') }}</span>{% endif %}
+    </div>
+    <h3 class="line-clamp-2 text-base font-bold text-content"><a href="{{ a.url }}" class="hover:text-primary-700">{{ a.title }}</a></h3>
+    {% if a.excerpt %}<p class="mt-2 line-clamp-2 flex-1 text-sm text-content-muted">{{ a.excerpt }}</p>{% endif %}
+    <a href="{{ a.url }}" class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-700">{{ trans('blog.read_more')|default('اقرأ المزيد') }}<svg class="size-4 rkn-flip-rtl" viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 4L6.1 5.4 10.7 10l-4.6 4.6L7.5 16l6-6z"/></svg></a>
+  </div>
+</article>

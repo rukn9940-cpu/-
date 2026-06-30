@@ -1,0 +1,6 @@
+<section class="rkn-section" x-data x-show="$store.recentlyViewed.count > 0" x-cloak aria-label="{{ trans('product.recently_viewed')|default('شوهدت مؤخرًا') }}">
+  <div class="rkn-container">
+    <h2 class="mb-6 text-xl font-extrabold text-content md:text-2xl">{{ trans('product.recently_viewed')|default('شوهدت مؤخرًا') }}</h2>
+    <salla-products-slider source="latest-viewed" limit="10"></salla-products-slider>
+  </div>
+</section>

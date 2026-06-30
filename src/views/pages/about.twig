@@ -1,18 +1,15 @@
-{#
-  pages/about.twig — About RKN
-  @summary  Brand story hero, mission, value pillars (trust badges), stats, and CTA.
-#}
-{% extends 'layouts/master.twig' %}
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('nav.about')|default('من نحن') }} — {{ store.name }}{% endblock %}
 
 {% block content %}
-{% include 'components/common/breadcrumb.twig' with { items: [{ name: trans('nav.about')|default('من نحن'), url: '/about' }] } only %}
+{% include 'components.breadcrumb' with { items: [{ name: trans('nav.about')|default('من نحن'), url: '/about' }] } %}
 
 <div class="rkn-container py-8">
-  {% include 'components/common/hero-banner.twig' with {
-    title: trans('about.title')|default('ركن الاحتراف'),
-    subtitle: trans('about.subtitle')|default('شريكك الموثوق في حلول الأمن والمراقبة بالمملكة العربية السعودية.'),
-    align: 'center'
-  } only %}
+  <section class="relative overflow-hidden rounded-2xl bg-accent px-6 py-14 text-center text-content-inverse md:px-12">
+    <h1 class="text-3xl font-extrabold md:text-5xl">{{ store.name|default('ركن الاحتراف') }}</h1>
+    <p class="mx-auto mt-4 max-w-2xl text-content-inverse/85">{{ trans('about.subtitle')|default('شريكك الموثوق في حلول الأمن والمراقبة بالمملكة العربية السعودية.') }}</p>
+  </section>
 
   <div class="mx-auto mt-12 max-w-3xl text-center">
     <h2 class="text-xl font-bold text-content md:text-2xl">{{ trans('about.mission_title')|default('مهمتنا') }}</h2>
@@ -20,28 +17,20 @@
   </div>
 </div>
 
-{# Stats #}
 <section class="rkn-section">
   <div class="rkn-container grid grid-cols-2 gap-4 md:grid-cols-4">
-    {% for s in [{n:'+10', l:'سنوات خبرة'}, {n:'+5000', l:'عملية تركيب'}, {n:'+50', l:'علامة تجارية'}, {n:'24/7', l:'دعم فني'}] %}
-      <div class="rkn-card p-6 text-center">
-        <p class="text-2xl font-extrabold text-primary-700">{{ s.n }}</p>
-        <p class="mt-1 text-sm text-content-muted">{{ s.l }}</p>
-      </div>
+    {% for s in [{n:'+10', l: trans('home.stat_years')|default('سنوات خبرة')}, {n:'+5000', l: trans('home.stat_installs')|default('عملية تركيب')}, {n:'+50', l: trans('about.brands')|default('علامة تجارية')}, {n:'24/7', l: trans('home.stat_support')|default('دعم فني')}] %}
+      <div class="rkn-card p-6 text-center"><p class="text-2xl font-extrabold text-primary-700">{{ s.n }}</p><p class="mt-1 text-sm text-content-muted">{{ s.l }}</p></div>
     {% endfor %}
   </div>
 </section>
 
-{# Values #}
 <section class="rkn-section bg-surface-sunken">
   <div class="rkn-container">
     <h2 class="mb-8 text-center text-2xl font-extrabold text-content">{{ trans('about.values')|default('قيمنا') }}</h2>
-    {% include 'components/trust/trust-badges.twig' with { layout: 'grid' } only %}
+    {% include 'components.trust-badges' with { layout: 'grid' } %}
   </div>
 </section>
 
-{% include 'components/common/cta-section.twig' with {
-  title: trans('about.cta_title')|default('جاهز لتأمين منشأتك؟'),
-  ctaLabel: trans('about.cta')|default('تواصل معنا'), ctaHref: '/contact'
-} only %}
+{% include 'components.cta' with { title: trans('about.cta_title')|default('جاهز لتأمين منشأتك؟'), ctaLabel: trans('about.cta')|default('تواصل معنا'), ctaHref: '/contact' } %}
 {% endblock %}

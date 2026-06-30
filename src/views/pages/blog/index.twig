@@ -1,0 +1,24 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('nav.blog')|default('المدونة') }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+{% include 'components.breadcrumb' with { items: [{ name: trans('nav.blog')|default('المدونة'), url: '/blog' }] } %}
+
+<div class="rkn-container py-8">
+  <header class="mb-8 max-w-2xl">
+    <h1 class="text-2xl font-extrabold text-content md:text-3xl">{{ trans('blog.title')|default('المدونة التعليمية') }}</h1>
+    <p class="mt-2 text-content-muted">{{ trans('blog.subtitle')|default('مقالات ونصائح حول أنظمة الأمن والمراقبة.') }}</p>
+  </header>
+
+  {% set articles = articles|default([]) %}
+  {% if articles is not empty %}
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {% for article in articles %}{% include 'components.blog-card' with { article: article } %}{% endfor %}
+    </div>
+    <div class="mt-10">{% include 'components.pagination' with { current: articles.current_page|default(1), total: articles.last_page|default(1), base: '/blog?page={page}' } %}</div>
+  {% else %}
+    {% include 'components.empty-state' with { icon: 'box', title: trans('blog.empty')|default('لا توجد مقالات بعد') } %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -17,6 +17,25 @@ const isRTL = () => document.documentElement.getAttribute('dir') === 'rtl';
 const money = (v) => (window.salla?.money ? window.salla.money(v) : new Intl.NumberFormat('en', { style: 'currency', currency: window.salla?.config?.get?.('store.currency') || 'SAR', numberingSystem: 'latn' }).format(Number(v) || 0));
 const lockScroll = (on) => document.documentElement.classList.toggle('overflow-hidden', on);
 
+/* Merchant color customization: regenerate the brand palette from theme settings
+ * (set as data-* on <html>) so a merchant's chosen colors drive every token. */
+function hexToRgb(hex) { hex = String(hex).replace('#', ''); if (hex.length === 3) hex = hex.split('').map((c) => c + c).join(''); const n = parseInt(hex, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+function mix(a, b, t) { return a.map((v, i) => Math.round(v + (b[i] - v) * t)); }
+function applyBrand() {
+  const root = document.documentElement, white = [255, 255, 255], ink = [15, 23, 42];
+  const p = root.dataset.primary;
+  if (p) {
+    const base = hexToRgb(p);
+    const steps = { 50: mix(base, white, 0.92), 100: mix(base, white, 0.84), 200: mix(base, white, 0.68), 300: mix(base, white, 0.5), 400: mix(base, white, 0.28), 500: base, 600: mix(base, ink, 0.16), 700: mix(base, ink, 0.32), 800: mix(base, ink, 0.48), 900: mix(base, ink, 0.62), 950: mix(base, ink, 0.78) };
+    for (const k in steps) root.style.setProperty(`--rkn-primary-${k}`, steps[k].join(' '));
+    root.style.setProperty('--rkn-color-primary', base.join(' '));
+    root.style.setProperty('--rkn-color-ring', base.join(' '));
+  }
+  if (root.dataset.secondary) root.style.setProperty('--rkn-color-secondary', hexToRgb(root.dataset.secondary).join(' '));
+  if (root.dataset.accent) root.style.setProperty('--rkn-color-accent', hexToRgb(root.dataset.accent).join(' '));
+}
+applyBrand();
+
 /* ---------------------------------------------------------------------------
  * Stores
  * ------------------------------------------------------------------------- */
@@ -157,6 +176,112 @@ Alpine.data('rknNewsletter', () => ({
     try {
       await (window.salla?.newsletter?.subscribe?.({ email: this.email }) ?? Promise.reject());
       this.state = 'success'; this.msg = window.salla?.lang?.get?.('blocks.newsletter.subscribed') || 'تم الاشتراك بنجاح!'; this.email = '';
+    } catch {
+      this.state = 'error'; this.msg = 'حدث خطأ، يرجى المحاولة مرة أخرى.';
+    }
+  },
+}));
+
+Alpine.store('recentlyViewed', {
+  items: store.get('recently-viewed', []),
+  track(id) { id = String(id); this.items = [id, ...this.items.filter((i) => i !== id)].slice(0, 12); store.set('recently-viewed', this.items); },
+  get count() { return this.items.length; },
+});
+
+Alpine.data('rknTrackView', (id) => ({ init() { if (id) this.$store.recentlyViewed.track(id); } }));
+
+/* Generic RTL-aware scroll-snap carousel (brand slider, content rows). */
+Alpine.data('rknCarousel', (opts = {}) => ({
+  atStart: true, atEnd: false,
+  init() { this.$nextTick(() => this._edges()); this.$refs.track?.addEventListener('scroll', () => this._edges(), { passive: true }); },
+  _step() { const t = this.$refs.track, c = t?.firstElementChild; if (!c) return t?.clientWidth || 0; return c.getBoundingClientRect().width + parseFloat(getComputedStyle(t).columnGap || '16'); },
+  next() { this.$refs.track?.scrollBy({ left: this._step() * (isRTL() ? -1 : 1), behavior: 'smooth' }); },
+  prev() { this.$refs.track?.scrollBy({ left: -this._step() * (isRTL() ? -1 : 1), behavior: 'smooth' }); },
+  _edges() { const t = this.$refs.track; if (!t) return; const max = t.scrollWidth - t.clientWidth, x = Math.abs(t.scrollLeft); this.atStart = x <= 1; this.atEnd = x >= max - 1; },
+}));
+
+/* Product gallery: thumbnail <-> main image, keyboard + RTL arrows. */
+Alpine.data('rknGallery', (images = []) => ({
+  images, active: 0, zoom: false,
+  select(i) { this.active = Math.max(0, Math.min(i, this.images.length - 1)); },
+  next() { this.select((this.active + 1) % this.images.length); },
+  prev() { this.select((this.active - 1 + this.images.length) % this.images.length); },
+  onKey(e) { if (e.key === 'ArrowRight') isRTL() ? this.prev() : this.next(); if (e.key === 'ArrowLeft') isRTL() ? this.next() : this.prev(); },
+}));
+
+/* Accessible tabs (description / specs / reviews). */
+Alpine.data('rknTabs', (initial = 0) => ({
+  active: initial,
+  select(i) { this.active = i; },
+  isActive(i) { return this.active === i; },
+  onKey(e, i, total) {
+    if (e.key === 'ArrowRight') this.active = isRTL() ? (i - 1 + total) % total : (i + 1) % total;
+    if (e.key === 'ArrowLeft') this.active = isRTL() ? (i + 1) % total : (i - 1 + total) % total;
+    if (e.key === 'Home') this.active = 0;
+    if (e.key === 'End') this.active = total - 1;
+  },
+}));
+
+/* Quantity stepper. */
+Alpine.data('rknQuantity', (opts = {}) => ({
+  qty: opts.value || 1, min: opts.min || 1, max: opts.max || 99,
+  inc() { this.qty = Math.min(this.max, this.qty + 1); this._emit(); },
+  dec() { this.qty = Math.max(this.min, this.qty - 1); this._emit(); },
+  onInput(e) { const n = parseInt(e.target.value, 10); this.qty = Number.isFinite(n) ? Math.max(this.min, Math.min(this.max, n)) : this.min; this._emit(); },
+  _emit() { this.$dispatch('rkn:quantity', { value: this.qty }); },
+}));
+
+/* Flash-sale countdown. */
+Alpine.data('rknCountdown', (end) => ({
+  days: '00', hours: '00', minutes: '00', seconds: '00', ended: false, _t: null,
+  init() {
+    const target = typeof end === 'number' ? end : Date.parse(end);
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) { this.ended = true; this.days = this.hours = this.minutes = this.seconds = '00'; clearInterval(this._t); return; }
+      const s = Math.floor(diff / 1000);
+      this.days = String(Math.floor(s / 86400)).padStart(2, '0');
+      this.hours = String(Math.floor((s % 86400) / 3600)).padStart(2, '0');
+      this.minutes = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+      this.seconds = String(s % 60).padStart(2, '0');
+    };
+    tick(); this._t = setInterval(tick, 1000);
+  },
+}));
+
+/* Filters: collapsible groups + mobile drawer. */
+Alpine.data('rknFilters', () => ({
+  drawer: false, groups: {}, applied: 0,
+  toggleGroup(id) { this.groups[id] = !this.groups[id]; },
+  isCollapsed(id) { return !!this.groups[id]; },
+  openDrawer() { this.drawer = true; lockScroll(true); },
+  closeDrawer() { this.drawer = false; lockScroll(false); },
+  count() { this.applied = this.$root.querySelectorAll('input:checked').length; },
+  reset() { this.$root.querySelectorAll('input:checked').forEach((i) => (i.checked = false)); this.applied = 0; this.$dispatch('rkn:filters-reset'); },
+}));
+
+/* Sort dropdown — updates the URL query and reloads. */
+Alpine.data('rknSort', (current = '') => ({
+  open: false, current,
+  select(value, label) {
+    this.current = label || value; this.open = false;
+    const u = new URL(window.location.href); u.searchParams.set('sort', value); u.searchParams.delete('page');
+    window.location.href = u.toString();
+  },
+}));
+
+/* FAQ accordion. */
+Alpine.data('rknFaq', (initial = 0) => ({ open: initial, toggle(i) { this.open = this.open === i ? null : i; } }));
+
+/* Generic Salla form (contact / quote / booking) with inline feedback. */
+Alpine.data('rknForm', () => ({
+  state: 'idle', msg: '',
+  async submit(form) {
+    this.state = 'loading'; this.msg = '';
+    const data = Object.fromEntries(new FormData(form));
+    try {
+      await (window.salla?.contacts?.send?.(data) ?? Promise.reject());
+      this.state = 'success'; this.msg = form.dataset.success || 'تم الإرسال بنجاح، سنتواصل معك قريبًا.'; form.reset();
     } catch {
       this.state = 'error'; this.msg = 'حدث خطأ، يرجى المحاولة مرة أخرى.';
     }

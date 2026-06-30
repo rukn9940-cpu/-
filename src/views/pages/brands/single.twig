@@ -1,0 +1,28 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ brand.name }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+{% set products = products|default([]) %}
+{% include 'components.breadcrumb' with { items: [
+  { name: trans('nav.brands')|default('العلامات التجارية'), url: '/brands' },
+  { name: brand.name, url: brand.url }
+] } %}
+
+<div class="rkn-container py-8">
+  <header class="mb-8 flex items-center gap-4">
+    {% if brand.logo %}<img src="{{ brand.logo }}" alt="{{ brand.name }}" class="h-16 w-auto rounded-lg border border-border bg-surface p-2">{% endif %}
+    <h1 class="text-2xl font-extrabold text-content md:text-3xl">{{ brand.name }}</h1>
+  </header>
+
+  {% if products is not empty %}
+    <div class="mb-5 flex justify-end">{% include 'components.sort' %}</div>
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+      {% for product in products %}{% include 'components.product-card' with { product: product } %}{% endfor %}
+    </div>
+    <div class="mt-10">{% include 'components.pagination' with { current: products.current_page|default(1), total: products.last_page|default(1), base: (brand.url|default('/brands')) ~ '?page={page}' } %}</div>
+  {% else %}
+    {% include 'components.empty-state' with { icon: 'box', title: trans('category.empty_title')|default('لا توجد منتجات'), ctaLabel: trans('common.view_all')|default('عرض الكل'), ctaHref: '/products' } %}
+  {% endif %}
+</div>
+{% endblock %}

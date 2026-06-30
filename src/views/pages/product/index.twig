@@ -1,74 +1,48 @@
-{#
-  pages/product/index.twig — Category / product listing page
-  @summary  Breadcrumb, category header, faceted filters (sidebar↔drawer),
-            results toolbar (count + sort), responsive product grid, pagination.
-            Also used as the layout for search results.
-  @data     category, products (array), filters (groups), pagination meta
-  @seo      h1 = category name; BreadcrumbList JSON-LD
-#}
-{% extends 'layouts/master.twig' %}
+{% extends 'layouts.master' %}
+
+{% block title %}{{ category.name|default(trans('nav.categories')|default('الأقسام')) }} — {{ store.name }}{% endblock %}
 
 {% block content %}
 {% set products = products|default([]) %}
 {% set current_page = products.current_page|default(1) %}
 {% set total_pages = products.last_page|default(1) %}
 
-{% include 'components/common/breadcrumb.twig' with { items: [
-  { name: category.name|default(trans('nav.categories')), url: category.url|default('#') }
-] } only %}
+{% include 'components.breadcrumb' with { items: [{ name: category.name|default(trans('nav.categories')|default('الأقسام')), url: category.url|default('#') }] } %}
 
 <div class="rkn-container py-6">
-  {# Category header #}
   <header class="mb-6">
-    <h1 class="text-2xl font-extrabold text-content md:text-3xl">{{ category.name|default(trans('nav.categories')) }}</h1>
+    <h1 class="text-2xl font-extrabold text-content md:text-3xl">{{ category.name|default(trans('nav.categories')|default('الأقسام')) }}</h1>
     {% if category.description %}<p class="mt-2 max-w-3xl text-content-muted">{{ category.description }}</p>{% endif %}
   </header>
 
   <div class="grid gap-8 lg:grid-cols-[280px_1fr]">
-    {# Filters #}
     {% set filter_groups = filters|default([
-      { id: 'brand', title: trans('product.brand'), type: 'checkbox', options: [] },
+      { id: 'brand', title: trans('product.brand')|default('العلامة التجارية'), type: 'checkbox', options: brands_filter|default([]) },
       { id: 'price', title: trans('category.price')|default('السعر'), type: 'price' },
-      { id: 'rating', title: trans('product.reviews'), type: 'checkbox', options: [
+      { id: 'rating', title: trans('product.reviews')|default('التقييم'), type: 'checkbox', options: [
         { value: '4', label: '4★ ' ~ (trans('category.and_up')|default('فأعلى')) },
         { value: '3', label: '3★ ' ~ (trans('category.and_up')|default('فأعلى')) }
       ] }
     ]) %}
-    <div>{% include 'components/category/filters.twig' with { groups: filter_groups } only %}</div>
+    <div>{% include 'components.filters' with { groups: filter_groups } %}</div>
 
-    {# Results #}
     <div>
       <div class="mb-5 flex items-center justify-between gap-3">
-        <p class="text-sm text-content-muted">
-          {{ products.total|default(products|length) }} {{ trans('category.results')|default('نتيجة') }}
-        </p>
-        {% include 'components/category/sort-menu.twig' with { options: [
-          { value: 'latest', label: trans('sort.latest')|default('الأحدث') },
-          { value: 'sales', label: trans('sort.best_selling')|default('الأكثر مبيعًا') },
-          { value: 'price-asc', label: trans('sort.price_low')|default('السعر: من الأقل') },
-          { value: 'price-desc', label: trans('sort.price_high')|default('السعر: من الأعلى') },
-          { value: 'rating', label: trans('sort.top_rated')|default('الأعلى تقييمًا') }
-        ] } only %}
+        <p class="text-sm text-content-muted">{{ products.total|default(products|length) }} {{ trans('category.results')|default('نتيجة') }}</p>
+        {% include 'components.sort' %}
       </div>
 
       {% if products is not empty %}
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-          {% for product in products %}
-            {% include 'components/product/product-card.twig' with { product: product } only %}
-          {% endfor %}
+          {% for product in products %}{% include 'components.product-card' with { product: product } %}{% endfor %}
         </div>
-        <div class="mt-10">
-          {% include 'components/ui/pagination.twig' with { current: current_page, total: total_pages, base: (category.url|default('/products')) ~ '?page={page}' } only %}
-        </div>
+        <div class="mt-10">{% include 'components.pagination' with { current: current_page, total: total_pages, base: (category.url|default('/products')) ~ '?page={page}' } %}</div>
       {% else %}
-        {% include 'components/ui/empty-state.twig' with {
-          icon: 'box',
-          title: trans('category.empty_title')|default('لا توجد منتجات'),
-          message: trans('category.empty_message')|default('لم نجد منتجات في هذا القسم حاليًا.'),
-          ctaLabel: trans('common.view_all'), ctaHref: '/products'
-        } only %}
+        {% include 'components.empty-state' with { icon: 'box', title: trans('category.empty_title')|default('لا توجد منتجات'), message: trans('category.empty_message')|default('لم نجد منتجات في هذا القسم حاليًا.'), ctaLabel: trans('common.view_all')|default('عرض الكل'), ctaHref: '/products' } %}
       {% endif %}
     </div>
   </div>
 </div>
+
+{% include 'components.recently-viewed' %}
 {% endblock %}

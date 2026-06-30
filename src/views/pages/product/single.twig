@@ -1,43 +1,37 @@
-{#
-  pages/product/single.twig — Product details
-  @summary  Breadcrumb, gallery + purchase info, tabs (description/specs/reviews),
-            related products, and recently-viewed. Product + Offer + AggregateRating
-            JSON-LD for SEO.
-  @data     product (Salla product object)
-  @seo      single <h1> (in product-info); Product structured data
-#}
-{% extends 'layouts/master.twig' %}
+{% extends 'layouts.master' %}
 
 {% block title %}{{ product.name }} — {{ store.name }}{% endblock %}
+
+{% block seo %}
+  <meta name="description" content="{{ (product.short_description|default(product.description))|striptags|slice(0, 160) }}">
+  <link rel="canonical" href="{{ product.url|default(url.current) }}">
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="{{ product.name }}">
+  <meta property="og:description" content="{{ (product.short_description|default(product.description))|striptags|slice(0, 160) }}">
+  {% if product.image %}<meta property="og:image" content="{{ product.image.url|default(product.image) }}">{% endif %}
+  <meta property="product:price:amount" content="{{ product.sale_price|default(product.price) }}">
+  <meta property="product:price:currency" content="{{ store.currency|default('SAR') }}">
+{% endblock %}
 
 {% block content %}
 {% set p = product %}
 
-{% include 'components/common/breadcrumb.twig' with { items: [
-  { name: p.category.name|default(trans('nav.categories')), url: p.category.url|default('#') },
+{% include 'components.breadcrumb' with { items: [
+  { name: p.category.name|default(trans('nav.categories')|default('الأقسام')), url: p.category.url|default('#') },
   { name: p.name, url: p.url }
-] } only %}
+] } %}
 
 <div class="rkn-container py-6">
   <div class="grid gap-8 lg:grid-cols-2">
-    {% include 'components/product/product-gallery.twig' with { product: p } only %}
-    {% include 'components/product/product-info.twig' with { product: p } only %}
+    {% include 'components.product-gallery' with { product: p } %}
+    {% include 'components.product-info' with { product: p } %}
   </div>
-
-  <div class="mt-10">
-    {% include 'components/product/product-tabs.twig' with { product: p } only %}
-  </div>
+  <div class="mt-10">{% include 'components.product-tabs' with { product: p } %}</div>
 </div>
 
-{# Related #}
-{% include 'components/product/related-products.twig' with {
-  title: trans('product.related'), products: related_products|default([])
-} only %}
+{% include 'components.related-products' with { source: 'related', sourceValue: p.id } %}
+{% include 'components.recently-viewed' %}
 
-{# Recently viewed #}
-{% include 'components/product/recently-viewed.twig' %}
-
-{# ---- Product structured data ---------------------------------------- #}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -54,11 +48,7 @@
     "availability": "{{ p.is_out_of_stock|default(false) ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock' }}",
     "url": {{ p.url|json_encode|raw }}
   }{% if p.rating is defined and (p.rating.count|default(p.reviews_count)|default(0)) > 0 %},
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "{{ p.rating.average|default(p.rating.stars)|default(p.rating) }}",
-    "reviewCount": "{{ p.rating.count|default(p.reviews_count)|default(0) }}"
-  }{% endif %}
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "{{ p.rating.average|default(p.rating.stars)|default(p.rating) }}", "reviewCount": "{{ p.rating.count|default(p.reviews_count)|default(0) }}" }{% endif %}
 }
 </script>
 {% endblock %}

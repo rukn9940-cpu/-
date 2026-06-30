@@ -1,0 +1,10 @@
+{% set value = value|default(0) %}
+{% set dim = (size|default('sm') == 'md') ? 'size-5' : 'size-4' %}
+<span class="inline-flex items-center gap-1.5" role="img" aria-label="{{ value }} {{ trans('product.out_of_5')|default('من 5') }}">
+  <span class="inline-flex items-center gap-0.5" aria-hidden="true">
+    {% for i in 1..5 %}
+      <svg class="{{ dim }} {{ i <= value ? 'text-secondary-500' : 'text-slate-300' }}" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9 4.7 17.6l1-5.8L1.5 7.7l5.9-.9z"/></svg>
+    {% endfor %}
+  </span>
+  {% if count is not null and count is defined %}<span class="text-xs text-content-subtle">({{ count }})</span>{% endif %}
+</span>

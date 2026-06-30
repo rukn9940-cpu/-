@@ -1,0 +1,7 @@
+{% set source = source|default('related') %}
+<section class="rkn-section" aria-label="{{ title|default(trans('product.related')|default('منتجات ذات صلة')) }}">
+  <div class="rkn-container">
+    <h2 class="mb-6 text-xl font-extrabold text-content md:text-2xl">{{ title|default(trans('product.related')|default('منتجات ذات صلة')) }}</h2>
+    <salla-products-slider source="{{ source }}" {% if sourceValue %}source-value="{{ sourceValue }}"{% endif %} limit="10"></salla-products-slider>
+  </div>
+</section>

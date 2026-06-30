@@ -1,7 +1,10 @@
 {% set dir = trans('dir')|default('rtl') %}
 {% set theme_mode = theme.settings.enable_dark_mode|default(false) ? 'dark' : 'light' %}
 <!DOCTYPE html>
-<html lang="{{ request.locale|default('ar') }}" dir="{{ dir }}" data-theme="{{ theme_mode }}" data-numerals="{{ theme.settings.numerals|default('western') }}">
+<html lang="{{ request.locale|default('ar') }}" dir="{{ dir }}" data-theme="{{ theme_mode }}" data-numerals="{{ theme.settings.numerals|default('western') }}"
+  {% if theme.settings.color_primary %}data-primary="{{ theme.settings.color_primary }}"{% endif %}
+  {% if theme.settings.color_secondary %}data-secondary="{{ theme.settings.color_secondary }}"{% endif %}
+  {% if theme.settings.color_accent %}data-accent="{{ theme.settings.color_accent }}"{% endif %}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

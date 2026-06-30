@@ -1,0 +1,22 @@
+{% extends 'layouts.master' %}
+
+{% block title %}{{ trans('account.login')|default('تسجيل الدخول') }} — {{ store.name }}{% endblock %}
+
+{% block content %}
+<div class="rkn-container py-12">
+  <div class="mx-auto max-w-md">
+    <div class="mb-6 text-center">
+      <h1 class="text-2xl font-extrabold text-content">{{ trans('account.login')|default('تسجيل الدخول') }}</h1>
+      <p class="mt-1 text-sm text-content-muted">{{ trans('auth.login_subtitle')|default('سجّل الدخول لمتابعة طلباتك ومفضلتك.') }}</p>
+    </div>
+    <div class="rkn-card p-6 md:p-8">
+      {# Salla renders the OTP / credentials login flow. #}
+      <salla-login></salla-login>
+    </div>
+    <p class="mt-4 text-center text-sm text-content-muted">
+      {{ trans('auth.no_account')|default('ليس لديك حساب؟') }}
+      <a href="{{ url.get('auth.register')|default('/register') }}" class="font-semibold text-primary-700 hover:underline">{{ trans('account.register')|default('إنشاء حساب') }}</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

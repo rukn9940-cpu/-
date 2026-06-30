@@ -1,0 +1,8 @@
+{% set b = brand %}
+<a href="{{ b.url|default('#') }}" class="rkn-card rkn-card--interactive flex aspect-[3/2] items-center justify-center p-5 grayscale transition hover:grayscale-0" aria-label="{{ b.name }}">
+  {% if b.logo %}
+    <img src="{{ b.logo }}" alt="{{ b.name }}" loading="lazy" class="max-h-14 w-auto object-contain">
+  {% else %}
+    <span class="text-sm font-bold text-content-muted">{{ b.name }}</span>
+  {% endif %}
+</a>

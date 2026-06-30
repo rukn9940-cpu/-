@@ -1,41 +1,25 @@
-{#
-  pages/checkout/index.twig — Checkout layout
-  @summary  Focused, distraction-light checkout shell: progress steps, the Salla
-            checkout form region, and a sticky order summary. Header/footer chrome
-            is minimized for conversion (no mega nav clutter on this route).
-  @note     Salla owns payment/shipping logic; this is the styled container.
-#}
-{% extends 'layouts/master.twig' %}
+{% extends 'layouts.master' %}
 
-{% block header %}
-  {# Slim checkout header for focus & trust #}
-  <div class="border-b border-border bg-surface">
-    <div class="rkn-container flex h-16 items-center justify-between">
-      <a href="{{ url.home|default('/') }}" class="flex items-center gap-2" aria-label="{{ store.name }}">
-        {% if store.logo %}<img src="{{ store.logo }}" alt="{{ store.name }}" class="h-8 w-auto">
-        {% else %}<span class="text-lg font-extrabold">{{ store.name|default('RKN') }}</span>{% endif %}
-      </a>
-      <span class="inline-flex items-center gap-2 text-sm font-medium text-content-muted">
-        <svg class="size-5 text-success-600" aria-hidden="true"><use href="#icon-lock"></use></svg>
-        {{ trans('checkout.secure')|default('دفع آمن ومشفّر') }}
-      </span>
-    </div>
-  </div>
-{% endblock %}
+{% block title %}{{ trans('cart.checkout')|default('إتمام الطلب') }} — {{ store.name }}{% endblock %}
 
 {% block content %}
+{# Slim checkout chrome: minimal trusted header, no mega nav. #}
+<div class="border-b border-border bg-surface">
+  <div class="rkn-container flex h-16 items-center justify-between">
+    <a href="{{ url.home|default('/') }}" class="flex items-center gap-2" aria-label="{{ store.name }}">
+      {% if store.logo %}<img src="{{ store.logo }}" alt="{{ store.name }}" class="h-8 w-auto">{% else %}<span class="text-lg font-extrabold">{{ store.name|default('RKN') }}</span>{% endif %}
+    </a>
+    <span class="inline-flex items-center gap-2 text-sm font-medium text-content-muted"><svg class="size-5 text-success-600" aria-hidden="true"><use href="#icon-lock"></use></svg>{{ trans('checkout.secure')|default('دفع آمن ومشفّر') }}</span>
+  </div>
+</div>
+
 <div class="rkn-container py-8">
-  {# Steps #}
-  {% set steps = [
-    trans('checkout.step_info')|default('المعلومات'),
-    trans('checkout.step_shipping')|default('الشحن'),
-    trans('checkout.step_payment')|default('الدفع')
-  ] %}
+  {% set steps = [trans('checkout.step_info')|default('المعلومات'), trans('checkout.step_shipping')|default('الشحن'), trans('checkout.step_payment')|default('الدفع')] %}
   <ol class="mx-auto mb-8 flex max-w-2xl items-center justify-between">
     {% for step in steps %}
       <li class="flex flex-1 items-center {{ not loop.last ? 'after:mx-2 after:h-0.5 after:flex-1 after:bg-border after:content-[\'\']' : '' }}">
         <span class="inline-flex items-center gap-2">
-          <span class="grid size-8 place-items-center rounded-full {{ loop.first ? 'bg-primary-600 text-white' : 'bg-surface-sunken text-content-muted' }} text-sm font-bold">{{ loop.index }}</span>
+          <span class="grid size-8 place-items-center rounded-full text-sm font-bold {{ loop.first ? 'bg-primary-600 text-white' : 'bg-surface-sunken text-content-muted' }}">{{ loop.index }}</span>
           <span class="hidden text-sm font-medium sm:inline {{ loop.first ? 'text-content' : 'text-content-muted' }}">{{ step }}</span>
         </span>
       </li>
@@ -43,26 +27,18 @@
   </ol>
 
   <div class="grid gap-8 lg:grid-cols-[1fr_380px]">
-    {# Salla checkout form region #}
-    <div class="rkn-card p-5 md:p-7">
-      <salla-checkout-form></salla-checkout-form>
-    </div>
-
-    {# Summary #}
-    <aside class="lg:sticky lg:top-24 self-start space-y-4">
+    <div class="rkn-card p-5 md:p-7"><salla-checkout-form></salla-checkout-form></div>
+    <aside class="space-y-4 self-start lg:sticky lg:top-24">
       <div class="rkn-card p-5">
         <h2 class="mb-4 text-lg font-bold">{{ trans('cart.order_summary')|default('ملخص الطلب') }}</h2>
         <salla-cart-summary view="mini"></salla-cart-summary>
       </div>
-      {% include 'components/trust/trust-badges.twig' with { layout: 'inline' } only %}
+      {% include 'components.trust-badges' with { layout: 'inline' } %}
     </aside>
   </div>
 </div>
 {% endblock %}
 
-{# Hide the bottom nav / mega chrome footer on checkout for focus #}
 {% block footer %}
-  <div class="border-t border-border py-6 text-center text-xs text-content-subtle">
-    © {{ "now"|date('Y') }} {{ store.name }} — {{ trans('footer.rights') }}
-  </div>
+  <div class="border-t border-border py-6 text-center text-xs text-content-subtle">© {{ "now"|date('Y') }} {{ store.name }} — {{ trans('footer.rights')|default('جميع الحقوق محفوظة') }}</div>
 {% endblock %}
