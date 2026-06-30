@@ -14,7 +14,7 @@
       {% if p.promotion_title %}<span class="rkn-badge rkn-badge--primary shadow-sm">{{ p.promotion_title }}</span>{% endif %}
     </div>
     {% if image %}
-      <img src="{{ image }}" alt="{{ p.name }}" loading="lazy" width="400" height="400" class="h-full w-full object-cover transition duration-500 group-hover:scale-105 {{ hover ? 'group-hover:opacity-0' : '' }}">
+      <img src="{{ image }}" alt="{{ p.name }}" loading="lazy" decoding="async" width="400" height="400" class="h-full w-full object-cover transition duration-500 group-hover:scale-105 {{ hover ? 'group-hover:opacity-0' : '' }}">
       {% if hover %}<img src="{{ hover }}" alt="" aria-hidden="true" loading="lazy" width="400" height="400" class="absolute inset-0 h-full w-full object-cover opacity-0 transition duration-500 group-hover:opacity-100">{% endif %}
     {% endif %}
   </a>

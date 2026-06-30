@@ -138,6 +138,9 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
   [dir='rtl'] .rkn-flip-rtl { transform: scaleX(-1); }
+
+  /* Skip rendering work for off-screen sections (CWV: faster first paint). */
+  .cv-auto { content-visibility: auto; contain-intrinsic-size: 0 600px; }
 }
 
 /* Salla web components: align with theme tokens */

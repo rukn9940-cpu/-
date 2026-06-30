@@ -36,7 +36,7 @@
 </section>
 
 {# Best sellers #}
-<section class="rkn-section bg-surface-sunken" aria-label="{{ trans('home.best_sellers')|default('الأكثر مبيعًا') }}">
+<section class="rkn-section cv-auto bg-surface-sunken" aria-label="{{ trans('home.best_sellers')|default('الأكثر مبيعًا') }}">
   <div class="rkn-container">
     <h2 class="mb-6 text-xl font-extrabold text-content md:text-2xl">{{ trans('home.best_sellers')|default('الأكثر مبيعًا') }}</h2>
     <salla-products-slider source="sales" limit="12"></salla-products-slider>
@@ -55,7 +55,7 @@
 {% for col in collections %}
   {% set cid = attribute(theme.settings, col.key)|default('') %}
   {% if cid %}
-    <section class="rkn-section" aria-label="{{ col.title }}">
+    <section class="rkn-section cv-auto" aria-label="{{ col.title }}">
       <div class="rkn-container">
         <h2 class="mb-6 text-xl font-extrabold text-content md:text-2xl">{{ col.title }}</h2>
         <salla-products-slider source="categories" source-value="{{ cid }}" limit="12"></salla-products-slider>
@@ -65,7 +65,7 @@
 {% endfor %}
 
 {# Business solutions banner #}
-<section class="rkn-section">
+<section class="rkn-section cv-auto">
   <div class="rkn-container">
     <div class="relative overflow-hidden rounded-2xl bg-accent px-6 py-12 text-center text-content-inverse md:px-12 md:py-16">
       <div class="pointer-events-none absolute -inset-block-start-16 -inset-inline-end-16 size-64 rounded-full bg-white/10 blur-2xl"></div>
@@ -79,7 +79,7 @@
 </section>
 
 {# Installation services banner #}
-<section class="rkn-section">
+<section class="rkn-section cv-auto">
   <div class="rkn-container">
     <div class="grid items-center gap-6 overflow-hidden rounded-2xl border border-border bg-surface p-6 md:grid-cols-2 md:p-10">
       <div>
@@ -101,7 +101,7 @@
 </section>
 
 {# Why choose RKN #}
-<section class="rkn-section bg-surface-sunken" aria-label="{{ trans('home.why_choose')|default('لماذا ركن الاحتراف؟') }}">
+<section class="rkn-section cv-auto bg-surface-sunken" aria-label="{{ trans('home.why_choose')|default('لماذا ركن الاحتراف؟') }}">
   <div class="rkn-container">
     <div class="mb-8 text-center">
       <h2 class="text-2xl font-extrabold text-content md:text-3xl">{{ trans('home.why_choose')|default('لماذا ركن الاحتراف؟') }}</h2>

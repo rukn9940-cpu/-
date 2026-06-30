@@ -33,4 +33,17 @@
     </aside>
   </div>
 </div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": {{ store.name|json_encode|raw }},
+  "url": {{ (url.home|default(url.current))|json_encode|raw }}{% if store.logo %},
+  "image": {{ store.logo|json_encode|raw }}{% endif %}{% if store.phone %},
+  "telephone": {{ store.phone|json_encode|raw }}{% endif %}{% if store.email %},
+  "email": {{ store.email|json_encode|raw }}{% endif %}{% if store.address %},
+  "address": { "@type": "PostalAddress", "addressCountry": "SA", "streetAddress": {{ store.address|json_encode|raw }} }{% endif %}
+}
+</script>
 {% endblock %}
