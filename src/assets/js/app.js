@@ -190,16 +190,6 @@ Alpine.store('recentlyViewed', {
 
 Alpine.data('rknTrackView', (id) => ({ init() { if (id) this.$store.recentlyViewed.track(id); } }));
 
-/* Generic RTL-aware scroll-snap carousel (brand slider, content rows). */
-Alpine.data('rknCarousel', (opts = {}) => ({
-  atStart: true, atEnd: false,
-  init() { this.$nextTick(() => this._edges()); this.$refs.track?.addEventListener('scroll', () => this._edges(), { passive: true }); },
-  _step() { const t = this.$refs.track, c = t?.firstElementChild; if (!c) return t?.clientWidth || 0; return c.getBoundingClientRect().width + parseFloat(getComputedStyle(t).columnGap || '16'); },
-  next() { this.$refs.track?.scrollBy({ left: this._step() * (isRTL() ? -1 : 1), behavior: 'smooth' }); },
-  prev() { this.$refs.track?.scrollBy({ left: -this._step() * (isRTL() ? -1 : 1), behavior: 'smooth' }); },
-  _edges() { const t = this.$refs.track; if (!t) return; const max = t.scrollWidth - t.clientWidth, x = Math.abs(t.scrollLeft); this.atStart = x <= 1; this.atEnd = x >= max - 1; },
-}));
-
 /* Product gallery: thumbnail <-> main image, keyboard + RTL arrows. */
 Alpine.data('rknGallery', (images = []) => ({
   images, active: 0, zoom: false,
@@ -229,24 +219,6 @@ Alpine.data('rknQuantity', (opts = {}) => ({
   dec() { this.qty = Math.max(this.min, this.qty - 1); this._emit(); },
   onInput(e) { const n = parseInt(e.target.value, 10); this.qty = Number.isFinite(n) ? Math.max(this.min, Math.min(this.max, n)) : this.min; this._emit(); },
   _emit() { this.$dispatch('rkn:quantity', { value: this.qty }); },
-}));
-
-/* Flash-sale countdown. */
-Alpine.data('rknCountdown', (end) => ({
-  days: '00', hours: '00', minutes: '00', seconds: '00', ended: false, _t: null,
-  init() {
-    const target = typeof end === 'number' ? end : Date.parse(end);
-    const tick = () => {
-      const diff = target - Date.now();
-      if (diff <= 0) { this.ended = true; this.days = this.hours = this.minutes = this.seconds = '00'; clearInterval(this._t); return; }
-      const s = Math.floor(diff / 1000);
-      this.days = String(Math.floor(s / 86400)).padStart(2, '0');
-      this.hours = String(Math.floor((s % 86400) / 3600)).padStart(2, '0');
-      this.minutes = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
-      this.seconds = String(s % 60).padStart(2, '0');
-    };
-    tick(); this._t = setInterval(tick, 1000);
-  },
 }));
 
 /* Filters: collapsible groups + mobile drawer. */

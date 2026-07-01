@@ -10,7 +10,7 @@
     "watch": "salla theme watch",
     "publish": "salla theme publish",
     "lint:css": "stylelint \"src/assets/styles/**/*.css\"",
-    "format": "prettier --write \"src/**/*.{js,css,json}\" \"docs/**/*.md\""
+    "format": "prettier --write \"src/**/*.{js,css,json}\" \"*.md\""
   },
   "dependencies": {
     "alpinejs": "^3.14.1",

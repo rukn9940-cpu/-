@@ -1,108 +1,83 @@
 # RKN Premium Theme — ركن الاحتراف
 
-> A production-ready, premium custom **Salla** ecommerce theme for **ركن الاحتراف**
-> (RKN — Security Systems & Solutions), Saudi Arabia.
+A premium, production-ready **Salla Twilight** storefront theme for **ركن الاحتراف**
+(RKN — Security Systems & Solutions), Saudi Arabia.
 
-**Version:** 1.0 · **Status:** Phase 1 — Architecture (awaiting approval)
-**Platform:** [Salla](https://salla.dev) Twilight Theme Framework
-**Direction:** RTL-first · Arabic-first · Accessibility AA · Core Web Vitals optimized
+**Version 1.0.0** · RTL-first · Arabic-first · Mobile-first · WCAG AA · Core Web Vitals optimized
 
 ---
 
-## 1. About
+## Overview
 
-RKN Premium Theme is a bespoke storefront experience for a Saudi security-systems
-retailer specializing in IP cameras, WiFi/Solar/4G cameras, NVR/DVR systems, access
-control, intercom, networking, storage, and professional installation services.
+RKN Premium Theme is a bespoke storefront for a Saudi security-systems retailer
+(IP / WiFi / Solar / 4G cameras, NVR/DVR, access control, intercom, networking, storage,
+and installation services). It is built natively on Salla's **Twilight** theme engine
+using Twig, the Twilight JS SDK, Salla Web Components, Alpine.js, and Tailwind CSS.
 
-The goal is to deliver the **best security-systems ecommerce experience in Saudi
-Arabia** — minimal, modern, luxury, elegant, fast, and trustworthy — exceeding local
-competitors in design quality and conversion-focused UX.
+## Highlights
 
-This is **original work** inspired by premium ecommerce experiences (Apple Store, Noon,
-Amazon, Golden Technology). No layouts or assets are copied.
+- **RTL & Arabic first** — authored for right-to-left with logical properties throughout; full `ar` / `en` localization.
+- **Mobile first & responsive** — designed from small screens up, with an app-like bottom navigation.
+- **Premium design system** — token-driven colors, typography, spacing, radius, shadows and motion (`src/assets/styles/tokens.css`); dark-mode foundation built in (off by default).
+- **Conversion-focused** — sticky header, smart search, mega menu, quick add-to-cart, cart drawer, wishlist, compare, cross-sell, trust signals.
+- **Merchant customization** — brand colors, hero slides, homepage category collections, top bar, reviews provider and more via the theme settings (`twilight.json`); brand colors regenerate the full palette at runtime.
+- **SEO & structured data** — Organization, WebSite + SearchAction, BreadcrumbList, Product + Offer + AggregateRating, Article, FAQPage and LocalBusiness JSON-LD; canonical, Open Graph and Twitter tags.
+- **Performance** — lazy-loaded images with explicit dimensions, `fetchpriority` on the hero, `content-visibility` for off-screen sections, async image decoding, scroll-snap carousels, and per-island JavaScript.
+- **Accessibility (WCAG AA)** — semantic landmarks, skip link, visible focus, focus traps, ARIA for menus/tabs/combobox/live regions, and reduced-motion support.
 
-## 2. Business Domain
+## Tech stack
 
-| Category | Examples |
+| Layer | Technology |
 |---|---|
-| Security Systems | Surveillance kits, bundles |
-| IP / WiFi / Solar / 4G Cameras | Indoor, outdoor, PTZ, bullet, dome |
-| Recording | NVR, DVR, Hard Drives |
-| Access & Entry | Access Control, Intercom |
-| Infrastructure | Networking (switches, PoE, routers) |
-| Services | Installation Services, Business Solutions |
+| Templating | Salla Twilight (Twig) |
+| Commerce | Twilight JS SDK + Salla Web Components |
+| Interactivity | Alpine.js (+ focus & collapse plugins) |
+| Styling | Tailwind CSS with a custom design-token layer |
+| Build | Salla CLI |
 
-## 3. Tech Stack
-
-- **Salla Twilight** — official theme engine (Twig templating)
-- **Twilight JS SDK + Web Components** — cart, wishlist, auth, product logic
-- **Alpine.js** — lightweight interactivity
-- **Tailwind CSS** — utility-first styling with a custom design-token layer
-- **Vite** (via Twilight CLI) — asset build pipeline
-- **Salla CLI** — local dev, preview, and publishing
-
-## 4. Repository Layout (high level)
+## Project structure
 
 ```
 .
-├── docs/                 # Architecture & engineering documentation (Phase 1)
 ├── src/
-│   ├── assets/           # js, styles, images
-│   ├── views/            # Twig: layouts, pages, components
-│   └── locales/          # ar.json (primary), en.json
-├── twilight.json         # Theme manifest (added in Phase 2)
-├── README.md
-└── TODO.md
+│   ├── assets/
+│   │   ├── js/app.js              # entry: Alpine stores/components, SDK wiring, brand palette
+│   │   ├── styles/app.css         # Tailwind layers + component classes
+│   │   ├── styles/tokens.css      # design tokens (single source of truth)
+│   │   └── images/
+│   ├── views/
+│   │   ├── layouts/master.twig    # document shell (head, SEO, JSON-LD, header/footer)
+│   │   ├── components/            # 28 reusable Twig partials
+│   │   └── pages/                 # 26 customer-facing page templates
+│   └── locales/                   # ar.json (primary) + en.json
+├── twilight.json                  # theme manifest + merchant settings
+├── tailwind.config.js
+├── postcss.config.js
+├── package.json
+├── INSTALL.md                     # installation & build guide
+├── CHANGELOG.md
+├── RELEASE_NOTES.md
+└── LICENSE
 ```
 
-See [`docs/FOLDER_STRUCTURE.md`](docs/FOLDER_STRUCTURE.md) for the full tree.
-
-## 5. Documentation Index
-
-| Document | Purpose |
-|---|---|
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | System architecture, rendering model, data flow |
-| [`docs/FOLDER_STRUCTURE.md`](docs/FOLDER_STRUCTURE.md) | Full directory tree and conventions |
-| [`docs/DEVELOPMENT_PLAN.md`](docs/DEVELOPMENT_PLAN.md) | Phased delivery plan & task breakdown |
-| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Milestones, timeline, scope per phase |
-| [`docs/CODING_STANDARDS.md`](docs/CODING_STANDARDS.md) | Twig/JS/CSS standards, naming, a11y, RTL rules |
-| [`docs/COMPONENT_LIBRARY.md`](docs/COMPONENT_LIBRARY.md) | Component catalog & API contracts |
-| [`TODO.md`](TODO.md) | Live task tracker across all phases |
-
-## 6. Phased Delivery
-
-The project ships in **5 governed phases**. Each phase completes, stops, and **waits
-for approval** before the next begins.
-
-1. **Phase 1 — Architecture** *(current)* — structure, docs, standards, plans.
-2. **Phase 2 — Design System** — tokens, typography, components primitives.
-3. **Phase 3 — Core Components** — header, mega menu, footer, product card, etc.
-4. **Phase 4 — Pages** — home, category, product, cart, checkout, account, content.
-5. **Phase 5 — Advanced Features** — wizards, calculators, quote builder, performance.
-
-> **Governance rule:** Never continue automatically. Complete a phase, stop, await
-> approval, then continue.
-
-## 7. Local Development (reference — used from Phase 2 onward)
+## Quick start
 
 ```bash
-# Install Salla CLI
-npm i -g @salla.sa/cli
-
-# Authenticate
-salla login
-
-# Serve the theme locally with hot reload
-salla theme serve
-
-# Build for production
-salla theme build
-
-# Publish a new version
-salla theme publish
+npm install -g @salla.sa/cli   # install the Salla CLI
+salla login                    # authenticate
+npm install                    # install theme dependencies
+npm run serve                  # local preview with hot reload
 ```
 
-## 8. License & Ownership
+See **[INSTALL.md](INSTALL.md)** for full installation, build, and publishing instructions.
 
-Proprietary — © ركن الاحتراف (RKN). All rights reserved.
+## Pages
+
+Home, Category/Listing, Product, Search, Cart, Checkout, Customer (Dashboard, Orders,
+Profile, Addresses, Wishlist), Compare, Brands (index + single), Blog (index + single),
+Contact, About, FAQ, Warranty, Installation Booking, Business Solutions, Auth
+(Login/Register), CMS Page, and a 404 error page.
+
+## License
+
+Proprietary — © ركن الاحتراف (RKN). All rights reserved. See [LICENSE](LICENSE).
